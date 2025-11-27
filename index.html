@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شهادة زواج تذكارية أنيقة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #451916;
+            background: rgba(69, 25, 22, 0.95) url('img/Artboard\ 2-8.svg') repeat;
+            background-size: auto;
+            background-position: center;
+            color: #FFFAE8;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 20px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; background-color: rgba(69, 25, 22, 0.92); backdrop-filter: blur(12px); z-index: 1000; direction: ltr; box-shadow: 0 2px 15px rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,250,232,0.15); }
+        .logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid #FFFAE8; box-shadow: 0 0 10px rgba(255,250,232,0.3); }
+        .store-name { font-size: 1.8rem; font-weight: 700; color: #FFFAE8; direction: rtl; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .main-content { margin-top: 100px; padding: 20px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .title-section { text-align: center; margin: 20px 0 40px; }
+        .main-title { font-size: 2rem; font-weight: 700; margin-bottom: 20px; color: #FFFAE8; }
+        .description { font-size: 1rem; line-height: 1.8; opacity: 0.9; max-width: 800px; margin: 0 auto; }
+        .price-section { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 30px 0; }
+        .sale-badge { width: 50px; height: 50px; background: #ff4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.8rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+        .price { font-size: 3rem; font-weight: 700; color: #FFFAE8; }
+        .gallery { position: relative; max-width: 800px; margin: 50px auto; height: 400px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .gallery-item { transition: all 0.3s ease; border-radius: 10px; overflow: hidden; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .gallery-item.side { width: 250px; height: 300px; opacity: 0.4; filter: blur(2px); cursor: pointer; }
+        .gallery-item.center { width: 400px; height: 400px; opacity: 1; filter: none; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .form-container {
+            max-width: 600px; margin: 50px auto; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px);
+            border-radius: 40px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+        }
+        .form-image { position: absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%; object-fit: cover; border-radius: inherit; z-index:0; opacity:0.95; }
+        .form-container form { position: relative; z-index: 1; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #451916; font-weight: 700; margin-bottom: 8px; font-size: 1rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 15px; border: 1px solid #451916; border-radius: 20px; font-size: 1rem;
+            font-family: 'Tajawal', sans-serif; background: white; color: #451916; transition: all 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:#28a745; box-shadow:0 0 10px rgba(40,167,69,0.3); }
+        .date-group { display: flex; gap: 12px; align-items: center; }
+        .date-group > div { flex: 1; }
+        .date-group input, .date-group select { text-align: center; }
+        .submit-btn { width:100%; padding:15px; background:#28a745; color:white; border:none; border-radius:20px; font-size:1.3rem; font-weight:700; cursor:pointer; transition:all 0.3s; margin-top:20px; }
+        .submit-btn:hover { background:#218838; transform:translateY(-2px); box-shadow:0 5px 20px rgba(40,167,69,0.4); }
+        .success-message { display:none; background:#28a745; color:white; padding:15px; border-radius:10px; text-align:center; margin-top:20px; }
+        .success-message.show { display:block; animation:slideIn 0.5s ease; }
+        @keyframes slideIn { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+        @media (max-width:768px) {
+            .date-group { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="img/Afdsfsset 2.png" alt="Logo" class="logo">
+        <div class="store-name">Store in your House</div>
+    </header>
+
+    <div class="main-content">
+        <div class="title-section">
+            <h1 class="main-title">شهادة زواج تذكارية أنيقة</h1>
+            <p class="description">
+                احتفظ بأجمل لحظة في حياتكما مع شهادة زواج مستوحاة من الجمال الإسلامي، تجمع بين الخط العربي الراقي والزخرفة الذهبية الفاخرة.
+            </p>
+        </div>
+
+        <div class="price-section">
+            <div class="sale-badge">خصم</div>
+            <div class="price">2300 DA</div>
+        </div>
+
+        <div class="gallery">
+            <div class="gallery-item side" data-index="0"><img src="img/dfddsf.png" alt="شهادة 1"></div>
+            <div class="gallery-item center" data-index="1"><img src="img/IMG_3yy640.png" alt="شهادة 2"></div>
+            <div class="gallery-item side" data-index="2"><img src="img/dfdsf.png" alt="شهادة 3"></div>
+        </div>
+
+        <div class="form-container">
+            <img src="img/Group 2.svg" alt="خلفية" class="form-image">
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="أدخل رقم هاتفك">
+                </div>
+
+                <div class="form-group">
+                    <label for="state">الولاية</label>
+                    <select id="state" name="state" required>
+                        <option value="">اختر الولاية</option>
+                        <option value="01 - أدرار">01 - أدرار</option>
+                        <option value="02 - الشلف">02 - الشلف</option>
+                        <option value="03 - الأغواط">03 - الأغواط</option>
+                        <option value="04 - أم البواقي">04 - أم البواقي</option>
+                        <option value="05 - باتنة">05 - باتنة</option>
+                        <option value="06 - بجاية">06 - بجاية</option>
+                        <option value="07 - بسكرة">07 - بسكرة</option>
+                        <option value="08 - بشار">08 - بشار</option>
+                        <option value="09 - البليدة">09 - البليدة</option>
+                        <option value="10 - البويرة">10 - البويرة</option>
+                        <option value="11 - تمنراست">11 - تمنراست</option>
+                        <option value="12 - تبسة">12 - تبسة</option>
+                        <option value="13 - تلمسان">13 - تلمسان</option>
+                        <option value="14 - تيارت">14 - تيارت</option>
+                        <option value="15 - تيزي وزو">15 - تيزي وزو</option>
+                        <option value="16 - الجزائر">16 - الجزائر</option>
+                        <option value="17 - الجلفة">17 - الجلفة</option>
+                        <option value="18 - جيجل">18 - جيجل</option>
+                        <option value="19 - سطيف">19 - سطيف</option>
+                        <option value="20 - سعيدة">20 - سعيدة</option>
+                        <option value="21 - سكيكدة">21 - سكيكدة</option>
+                        <option value="22 - سيدي بلعباس">22 - سيدي بلعباس</option>
+                        <option value="23 - عنابة">23 - عنابة</option>
+                        <option value="24 - قالمة">24 - قالمة</option>
+                        <option value="25 - قسنطينة">25 - قسنطينة</option>
+                        <option value="26 - المدية">26 - المدية</option>
+                        <option value="27 - مستغانم">27 - مستغانم</option>
+                        <option value="28 - المسيلة">28 - المسيلة</option>
+                        <option value="29 - معسكر">29 - معسكر</option>
+                        <option value="30 - ورقلة">30 - ورقلة</option>
+                        <option value="31 - وهران">31 - وهران</option>
+                        <option value="32 - البيض">32 - البيض</option>
+                        <option value="33 - إليزي">33 - إليزي</option>
+                        <option value="34 - برج بوعريريج">34 - برج بوعريريج</option>
+                        <option value="35 - بومرداس">35 - بومرداس</option>
+                        <option value="36 - الطارف">36 - الطارف</option>
+                        <option value="37 - تندوف">37 - تندوف</option>
+                        <option value="38 - تيسمسيلت">38 - تيسمسيلت</option>
+                        <option value="39 - الوادي">39 - الوادي</option>
+                        <option value="40 - خنشلة">40 - خنشلة</option>
+                        <option value="41 - سوق أهراس">41 - سوق أهراس</option>
+                        <option value="42 - تيبازة">42 - تيبازة</option>
+                        <option value="43 - ميلة">43 - ميلة</option>
+                        <option value="44 - عين الدفلى">44 - عين الدفلى</option>
+                        <option value="45 - النعامة">45 - النعامة</option>
+                        <option value="46 - عين تموشنت">46 - عين تموشنت</option>
+                        <option value="47 - غرداية">47 - غرداية</option>
+                        <option value="48 - غليزان">48 - غليزان</option>
+                        <option value="49 - توقرت">49 - توقرت</option>
+                        <option value="50 - جانت">50 - جانت</option>
+                        <option value="51 - المغير">51 - المغير</option>
+                        <option value="52 - المنيعة">52 - المنيعة</option>
+                        <option value="53 - عين صالح">53 - عين صالح</option>
+                        <option value="54 - عين قزام">54 - عين قزام</option>
+                        <option value="55 - برج باجي مختار">55 - برج باجي مختار</option>
+                        <option value="56 - بني عباس">56 - بني عباس</option>
+                        <option value="57 - أولاد جلال">57 - أولاد جلال</option>
+                        <option value="58 - إن صالح">58 - إن صالح</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="commune">البلدية</label>
+                    <select id="commune" name="commune" required>
+                        <option value="">اختر الولاية أولاً</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="groomName">اسم الزوج</label>
+                    <input type="text" id="groomName" name="groomName" required placeholder="أدخل اسم الزوج كاملاً">
+                </div>
+                <div class="form-group">
+                    <label for="brideName">اسم الزوجة</label>
+                    <input type="text" id="brideName" name="brideName" required placeholder="أدخل اسم الزوجة كاملاً">
+                </div>
+
+                <div class="form-group">
+                    <label>تاريخ الزواج</label>
+                    <div class="date-group">
+                        <div><input type="text" id="weddingYear" placeholder="السنة (مثال: 2025)" maxlength="4" required></div>
+                        <div>
+                            <select id="weddingMonth" required>
+                                <option value="">الشهر</option>
+                                <option value="01">يناير</option><option value="02">فبراير</option><option value="03">مارس</option>
+                                <option value="04">أبريل</option><option value="05">مايو</option><option value="06">يونيو</option>
+                                <option value="07">يوليو</option><option value="08">أغسطس</option><option value="09">سبتمبر</option>
+                                <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+                            </select>
+                        </div>
+                        <div><input type="text" id="weddingDay" placeholder="اليوم (مثال: 17)" maxlength="2" required></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="color">اختيار اللون</label>
+                    <select id="color" name="color" required>
+                        <option value="">اختر اللون</option>
+                        <option value="أبيض">أبيض</option>
+                        <option value="أسود">أسود</option>
+                        <option value="ذهبي">ذهبي</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">اطلب الآن</button>
+            </form>
+            <div class="success-message" id="successMessage">
+                تم استلام طلبك بنجاح! سنتواصل معك قريباً
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const communesParWilaya = {
+          "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
+          "02 - الشلف": ["الشلف", "تنس", "بني حواء", "أبو الحسن", "هرنفة", "وادي الفضة", "الكريمية", "المرسى", "وادي سلي", "أولاد فارس", "الصبحة", "بوزغاية", "الزبوجة", "تاجنة", "عين مران", "بناي يعقوب", "الأربعاء", "الخميس", "ابو الحسن"],
+          "03 - الأغواط": ["الأغواط", "بريزينة", "عين ماضي", "الحاج المكي", "الغيشة", "سيدي بوزيد", "قصر الحيران", "الرقيبة", "تاجموت", "عين سيدي علي", "البيضاء", "تاويالة", "الخنق", "الرملة", "سبقاق", "حاسي الدلاعة", "وادي مرة", "العسافية"],
+          "04 - أم البواقي": ["أم البواقي", "عين البيضاء", "عين مليلة", "سيقوس", "عين فكرون", "عين كرشة", "الحرميلية", "الضلعة", "عين ببوش", "البرج", "أولاد حملة", "الفجوج", "القيقبة", "الزرقاء", "بئر الشهداء", "عين الزيتون", "الجزايرية", "القلعة"],
+          "05 - باتنة": ["باتنة", "بريكة", "رأس العيون", "عين التوتة", "مروانة", "سريانة", "منعة", "تازولت", "المعذر", "أولاد سي سليمان", "تيمقاد", "عين ياقوت", "فسديس", "تكوت", "الجزار", "أريس", "شير", "نقاوس", "الحاسي", "تالخمت"],
+          "06 - بجاية": ["بجاية", "أقبو", "سيدي عيش", "القصر", "أوزلاقن", "تيشي", "صدوق", "الدريات", "تاوريرت إغيل", "شميني", "سوق أوفلا", "تيزي نثلاثة", "أملو", "إغيل علي", "أدكار", "بني كسيلة", "تالة حمزة", "سيدي عياد"],
+          "07 - بسكرة": ["بسكرة", "طولقة", "سيدي عقبة", "ليشانة", "زريبة الوادي", "الحوش", "عين الناقة", "القصور", "المزيرعة", "فوغال", "الفيض", "الحاجب", "القنطرة", "أوماش", "أولاد جلال"],
+          "08 - بشار": ["بشار", "بني ونيف", "العبادلة", "كرزاز", "تاغيت", "الواتة", "إقلي", "بني عباس", "أولاد سيدي الشيخ", "أولاد خضير", "القصابي"],
+          "09 - البليدة": ["البليدة", "بوفاريك", "الأربعاء", "وادي العلايق", "الشريعة", "حمام ملوان", "بني تامو", "الصومعة", "موزاية", "شفة", "العفرون", "أولاد يعيش", "الروراوة", "بن خليل", "سيدي موسى", "بوعرفة"],
+          "10 - البويرة": ["البويرة", "الأخضرية", "عين بسام", "بشلول", "الأربعاء", "بئر غبالو", "بوردج", "العجيبة", "الحجرة الزرقاء", "الهاشمية", "المعمورة", "وادي البردي"],
+          "11 - تمنراست": ["تمنراست", "عين قزام", "عين أمقل", "إدلس", "تاظروك", "سيلت", "عين غار"],
+          "12 - تبسة": ["تبسة", "بئر العاتر", "العوينات", "نقرين", "الماء الأبيض", "مرسط", "العقلة", "الشريعة", "صفصاف الوسرى", "بوقرن"],
+          "13 - تلمسان": ["تلمسان", "غريس", "سبدو", "عين تالوت", "صبرة", "الرمشي", "سيدي الجيلالي", "عين يوسف", "حمام بوغرارة", "عين فزة"],
+          "14 - تيارت": ["تيارت", "مدروة", "مهدية", "عين بوشقيف", "عين دزاريت", "قرطوفة", "سي عبد الغني", "وادي ليلي", "رحوية", "النعيمة"],
+          "15 - تيزي وزو": ["تيزي وزو", "عين الحمام", "أزفون", "مقلع", "واقنون", "إيفيغاء", "أزرو", "بعقبة", "بوجيمة", "تيزي راشد", "تيزي غنيف", "الأربعاء ناث إيراثن"],
+          "16 - الجزائر": ["الجزائر الوسطى", "القصبة", "حسين داي", "بئر مراد رايس", "باب الواد", "الرويبة", "بوزريعة", "زرالدة", "الدار البيضاء", "بئر خادم", "المحمدية", "الدرارية", "الجزائر الجديدة", "حيدرة", "حجرة حسين", "الواشنة", "الأبيار"],
+          "17 - الجلفة": ["الجلفة", "عين وسارة", "دار الشيوخ", "الشارف", "حد الصحاري", "عين الإبل", "مسعد", "زعفران", "القديد", "سيدي لعجال", "تعظميت", "فيض البطمة"],
+          "18 - جيجل": ["جيجل", "الميلية", "الطاهير", "القنار", "سيدي معروف", "الشقفة", "غبالة", "بوراوي بلهادف", "العوانة", "أم عبود", "زيامة منصورية", "السطارة"],
+          "19 - سطيف": ["سطيف", "عين أرنات", "عين ولمان", "عين آزال", "بئر العرش", "بوعنداس", "جميلة", "قنزات", "صالح باي", "القلتة الزرقاء", "حمام قرقور", "معاوية"],
+          "20 - سعيدة": ["سعيدة", "دوي ثايل", "أولاد إبراهيم", "سيدي عمر", "سيدي أحمد", "عين الحجر", "البيض", "يوب", "حدادة", "مشيرة"],
+          "21 - سكيكدة": ["سكيكدة", "الحروش", "ابن بسلة", "مشوار", "سيدي عبد العزيز", "العلمة", "برحال", "الطرشان"],
+          "22 - سيدي بلعباس": ["سيدي بلعباس", "تسالة", "مرين", "رأس الماء", "سيدي علي بوسيدي", "تلمون", "عين أدن", "مزاورو", "سيدي لحسن", "بطيوة", "سيدي إبراهيم", "حمام ريغة"],
+          "23 - عنابة": ["عنابة", "برحال", "الشرفة", "العنصر", "وادي العنب", "البوني", "الحجار", "سرايدي", "شطايبي", "تريعات"],
+          "24 - قالمة": ["قالمة", "هيليوبوليس", "وادي الزناتي", "بوشقوف", "عين بن بيضاء", "بومهرة", "حمام دباغ", "حمام النبايل", "لخزارة", "وادي فراغة"],
+          "25 - قسنطينة": ["قسنطينة", "الخروب", "زيغود يوسف", "عين سمارة", "حامة بوزيان", "درايس", "ابن زياد", "ابن باديس", "مليلية", "مروانة"],
+          "26 - المدية": ["المدية", "وزرة", "العزيزية", "الشيخ", "العيساوية", "تمسقيدة", "سيدي نعمان", "العمارية", "الكاف", "بوعيش", "أولاد عنتر", "أولاد هلال"],
+          "27 - مستغانم": ["مستغانم", "حجاج", "خير الدين", "مزغران", "عين تادلس", "سيدي علي", "بوقيراط", "الصفصاف", "عشعاشة", "خضرة", "ستيدية"],
+          "28 - المسيلة": ["المسيلة", "بوسعادة", "أولاد دراج", "سيدي عامر", "عين الحجل", "عين الملح", "حمام الضلعة", "الهامل", "مقرة", "أولاد ماضي", "سليم", "الخبانة"],
+          "29 - معسكر": ["معسكر", "سيق", "غريس", "وادي الأبطال", "زهانة", "ماوسطة", "مقطع دوز", "عين فراح", "البرج", "خليل", "المامونية", "قرجوم"],
+          "30 - ورقلة": ["ورقلة", "حاسي مسعود", "انقوسة", "الطيبات", "سيدي خويلد", "حاسي بن عبد الله", "العقلة", "بئر بير", "الرويسات", "النزلة"],
+          "31 - وهران": ["وهران", "بئر الجير", "الأبيار", "سانيا", "عين الترك", "قديل", "بطيوة", "أرزيو", "حاسي بونيف", "الكرمة", "بوسفر", "بوتليليس", "سيدي الشحمي"],
+          "32 - البيض": ["البيض", "بوقطب", "الغاسول", "الأبيض", "بريزينة", "الشقيق", "الخيثر", "كراكدة", "رأس الماء", "بوسمغون"],
+          "33 - إليزي": ["إليزي", "جانت", "برج عمر إدريس", "إن أميناس"],
+          "34 - برج بوعريريج": ["برج بوعريريج", "رأس الوادي", "برج زمورة", "الحمادية", "الميلية", "عين تاغروت", "غيلاسة", "المعاصم", "مجانة", "المنصورة"],
+          "35 - بومرداس": ["بومرداس", "بودواو", "بغلية", "الثنية", "دلس", "زموري", "الناصرية", "يسر", "أوقاس", "خميس الخشنة"],
+          "36 - الطارف": ["الطارف", "بن مهيدي", "البسباس", "بوحجار", "الطارف", "العيون", "زريزر", "الشط", "عين العسل", "الذرعان"],
+          "37 - تندوف": ["تندوف", "أوم العير"],
+          "38 - تيسمسيلت": ["تيسمسيلت", "برج بونعامة", "لرجام", "ثنية الحد", "الأزهرية", "عميرة", "بني شعيب", "سيدي بوتشنت", "سيدي عابد", "تملاحت"],
+          "39 - الوادي": ["الوادي", "البياضة", "رباح", "الرقيبة", "حساني عبد الكريم", "قمار", "المقرن", "اميه وانسة", "سطيل", "تغزوت"],
+          "40 - خنشلة": ["خنشلة", "قايس", "بغاي", "شلية", "الحامة", "عين الطويلة", "يابوس", "الولجة", "المحمل", "ام العظائم"],
+          "41 - سوق أهراس": ["سوق أهراس", "سدراتة", "المراهنة", "تاورة", "الزوابي", "الحدادة", "الخضارة", "أولاد إدريس", "الزعرور", "الطاية"],
+          "42 - تيبازة": ["تيبازة", "شرشال", "دamous", "فوكة", "بوفاريك", "القليعة", "حجوط", "سيدي راشد", "عين تاقورايت", "مسلمون", "سيدي سميان", "بوهارون", "خميستي", "عين تيموشنت"],
+          "43 - ميلة": ["ميلة", "فرجيوة", "شلغوم العيد", "تاجنانت", "عين البيضاء", "سيدي مروان", "التلاغمة", "ترعي باينان", "أولاد اخلوف", "الرواشد"],
+          "44 - عين الدفلى": ["عين الدفلى", "مليانة", "بومدفع", "العامرة", "برج الأمير خالد", "جندل", "العبادية", "عين لشياخ", "الحسينية", "روينة"],
+          "45 - النعامة": ["النعامة", "مغرار", "عين الصفراء", "عين بن خليل", "مكمن بن عمار", "الصفصاف", "المشرية", "سفيسيفة", "عسلة"],
+          "46 - عين تموشنت": ["عين تموشنت", "حمام بوحجر", "بني صاف", "العين", "الأمير عبد القادر", "عين الأربعاء", "الأمير", "سيدي بن عدة", "حاسي الغلة", "بوجبهور البرج"],
+          "47 - غرداية": ["غرداية", "متليلي", "المنيعة", "ضاية بن ضحوة", "بونورة", "القرارة", "بريان", "أقلي", "حاسي القارة", "زلفانة"],
+          "48 - غليزان": ["غليزان", "وادي رهيو", "الحمادنة", "عمي موسى", "عين طارق", "القلعة", "منداس", "وزرة", "سيدي سعادة", "بني درقن"],
+          "49 - توقرت": ["توقرت", "تماسين", "الطيبات", "الخبرة", "مغيلة", "النزلة"],
+          "50 - جانت": ["جانت", "برج الحواس", "إيليزي"],
+          "51 - المغير": ["المغير", "سطيل", "جامعة", "المنقر", "النخلة", "الزويرات"],
+          "52 - المنيعة": ["المنيعة", "حاسي الفحل", "الغرارة", "بونوارة", "المطارفة", "العقلة"],
+          "53 - عين صالح": ["عين صالح", "إن غار", "تيمياوين", "أقبيل", "المطارفة", "السبع"],
+          "54 - عين قزام": ["عين قزام", "تين زواتين", "إيسين", "أمقيد", "أنغول", "تارك"],
+          "55 - برج باجي مختار": ["برج باجي مختار", "تيمياوين", "المالكية", "السبع", "العوينات"],
+          "56 - بني عباس": ["بني عباس", "تيمودي", "القصابي", "المطارفة", "تاغيت", "كرزاز"],
+          "57 - أولاد جلال": ["أولاد جلال", "الفيض", "الحاجب", "المزيرعة", "بسكرة", "طولقة"],
+          "58 - إن صالح": ["إن صالح", "عين صالح", "تيمياوين", "المطارفة", "السبع", "العوينات"]
+        };
+
+        // تحديث البلديات عند اختيار الولاية
+        document.getElementById('state').addEventListener('change', function () {
+            const wilaya = this.value;
+            const communeSelect = document.getElementById('commune');
+            communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
+            if (wilaya && communesParWilaya[wilaya]) {
+                communesParWilaya[wilaya].sort().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    communeSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // إرسال النموذج مع دمج التاريخ
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const year = document.getElementById('weddingYear').value.trim();
+            const month = document.getElementById('weddingMonth').value;
+            const day = document.getElementById('weddingDay').value.trim().padStart(2, '0');
+
+            if (!year || !month || !day || year.length !== 4 || isNaN(day) || parseInt(day) < 1 || parseInt(day) > 31) {
+                alert('يرجى إدخال تاريخ صحيح');
+                return;
+            }
+
+            const weddingDate = `${year}/${month}/${day}`;
+
+            const formData = new FormData();
+            formData.append('phone', '="' + document.getElementById('phone').value + '"');
+            formData.append('state', document.getElementById('state').value);
+            formData.append('commune', document.getElementById('commune').value);
+            formData.append('groomName', document.getElementById('groomName').value);
+            formData.append('brideName', document.getElementById('brideName').value);
+            formData.append('weddingDate', weddingDate);
+            formData.append('color', document.getElementById('color').value);
+            formData.append('timestamp', new Date().toLocaleString('ar-DZ'));
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyLwp8Fs7-gS3uVCTvcWVi0cR0hJCtlEaI1POMToIo7nUv0QOTwx49_qpSSJO0ZI1WLlQ/exec';
+
+            try {
+                const submitBtn = this.querySelector('.submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'جاري الإرسال...';
+
+                const response = await fetch(scriptURL, { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    document.getElementById('successMessage').classList.add('show');
+                    this.reset();
+                    document.getElementById('commune').innerHTML = '<option value="">اختر الولاية أولاً</option>';
+                    setTimeout(() => document.getElementById('successMessage').classList.remove('show'), 6000);
+                } else {
+                    alert('خطأ: ' + result.message);
+                }
+            } catch (err) {
+                alert('فشل الإرسال، تأكد من الاتصال بالإنترنت');
+            } finally {
+                const submitBtn = this.querySelector('.submit-btn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'اطلب الآن';
+            }
+        });
+    </script>
+</body>
+</html>
