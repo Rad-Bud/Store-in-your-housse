@@ -482,6 +482,26 @@
     </div>
 
     <script>
+           const galleryItems = document.querySelectorAll(".gallery-item");
+
+    galleryItems.forEach(item => {
+        item.addEventListener("click", () => {
+            if (item.classList.contains("center")) return;
+
+            // Remove center from current main image
+            document.querySelector(".gallery-item.center").classList.remove("center");
+            document.querySelectorAll(".gallery-item").forEach(el => {
+                el.classList.remove("side");
+            });
+
+            // Add side class to all
+            galleryItems.forEach(el => el.classList.add("side"));
+
+            // Make clicked item center
+            item.classList.remove("side");
+            item.classList.add("center");
+        });
+    });
         const communesParWilaya = {
             "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
             "02 - الشلف": ["الشلف", "تنس", "بني حواء", "أبو الحسن", "هرنفة", "وادي الفضة", "الكريمية", "المرسى", "وادي سلي", "أولاد فارس", "الصبحة", "بوزغاية", "الزبوجة", "تاجنة", "عين مران", "بناي يعقوب", "الأربعاء", "الخميس", "ابو الحسن"],
