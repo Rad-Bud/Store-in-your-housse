@@ -834,7 +834,7 @@
                             <option value="ذهبي">ذهبي ملكي</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>اطلب الآن بـ 2300 دج
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>اطلب الآن بـ 1800 دج
                         فقط</button>
                     <button type="button" class="btn btn-secondary" onclick="prevStep(2)">رجوع</button>
                 </div>
@@ -857,7 +857,7 @@
                 onclick="document.getElementById('exitPopup').classList.remove('show')">×</button>
             <h3 class="popup-title">لا تذهب الآن!</h3>
             <p style="font-size:1.1rem;margin-bottom:20px;">احصل على العرض قبل نفاذ الكمية المحدودة</p>
-            <div class="popup-discount">فقط 2300 دج</div>
+            <div class="popup-discount">فقط 1800 دج</div>
             <button class="btn btn-primary"
                 onclick="document.querySelector('.form-section').scrollIntoView();document.getElementById('exitPopup').classList.remove('show')">اطلب
                 الآن</button>
@@ -1021,7 +1021,7 @@
                 alert('فشل الإرسال، تأكد من الاتصال');
             } finally {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'اطلب الآن بـ 2300 دج فقط';
+                submitBtn.textContent = 'اطلب الآن بـ 1800 دج فقط';
                 validateForm();
             }
         });
@@ -1036,5 +1036,6 @@
         });
     </script>
 </body>
+
 
 </html>
