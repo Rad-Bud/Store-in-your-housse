@@ -12,7 +12,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -785,9 +785,15 @@
 
             <form id="orderForm">
                 <div class="form-step active" id="step1">
-                    <div class="form-group"><label for="phone">رقم الهاتف</label><input type="tel" id="phone" required
-                            placeholder="مثال: 0555123456"></div>
-                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">التالي</button>
+                    <div class="form-group"><label for="phone">رقم الهاتف</label>
+                        <input type="tel" autocomplete="tel" inputmode="numeric" id="phone" required
+                            pattern="(05|06|07)\d{8}"
+                            title="الرقم يجب أن يبدأ ب 05 أو 06 أو 07 و يحتوي على 10 أرقام فقط" maxlength="10"
+                            placeholder="مثال: 0555123456">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="moveStep(2)">
+                        التالي
+                    </button>
                 </div>
 
                 <div class="form-step" id="step2">
@@ -796,8 +802,12 @@
                     <div class="form-group"><label for="commune">البلدية</label><select id="commune" required>
                             <option value="">اختر الولاية أولاً</option>
                         </select></div>
-                    <button type="button" class="btn btn-primary" onclick="nextStep(3)">التالي</button>
-                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">رجوع</button>
+                    <button type="button" class="btn btn-primary" onclick="moveStep(3)">
+                        التالي
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="moveStep(1)">
+                        رجوع
+                    </button>
                 </div>
 
                 <div class="form-step" id="step3">
@@ -834,9 +844,12 @@
                             <option value="ذهبي">ذهبي ملكي</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>اطلب الآن بـ 1800 دج
-                        فقط</button>
-                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">رجوع</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                        اطلب الآن بـ 1800 دج فقط
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="moveStep(2)">
+                        رجوع
+                    </button>
                 </div>
             </form>
             <div class="success-message" id="successMessage">تم استلام طلبك بنجاح! سنتواصل معك خلال دقائق</div>
@@ -864,179 +877,8 @@
         </div>
     </div>
 
-    <script>
-        // قاعدة بيانات الولايات والبلديات كاملة
-        const communesParWilaya = {
-            "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
-            "02 - الشلف": ["الشلف", "تنس", "بني حواء", "أبو الحسن", "هرنفة", "وادي الفضة", "الكريمية", "المرسى", "وادي سلي", "أولاد فارس", "الصبحة", "بوزغاية", "الزبوجة", "تاجنة", "عين مران", "بناي يعقوب", "الأربعاء", "الخميس"],
-            "03 - الأغواط": ["الأغواط", "بريزينة", "عين ماضي", "الحاج المكي", "الغيشة", "سيدي بوزيد", "قصر الحيران", "الرقيبة", "تاجموت", "عين سيدي علي", "البيضاء", "تاويالة", "الخنق", "الرملة", "سبقاق", "حاسي الدلاعة", "وادي مرة", "العسافية"],
-            "04 - أم البواقي": ["أم البواقي", "عين البيضاء", "عين مليلة", "سيقوس", "عين فكرون", "عين كرشة", "الحرميلية", "الضلعة", "عين ببوش", "البرج", "أولاد حملة", "الفجوج", "القيقبة", "الزرقاء", "بئر الشهداء", "عين الزيتون"],
-            "05 - باتنة": ["باتنة", "بريكة", "رأس العيون", "عين التوتة", "مروانة", "سريانة", "منعة", "تازولت", "المعذر", "أولاد سي سليمان", "تيمقاد", "عين ياقوت", "فسديس", "تكوت", "الجزار", "أريس", "شير", "نقاوس", "الحاسي", "تالخمت"],
-            "06 - بجاية": ["بجاية", "أقبو", "سيدي عيش", "القصر", "أوزلاقن", "تيشي", "صدوق", "الدريات", "تاوريرت إغيل", "شميني", "سوق أوفلا", "تيزي نثلاثة", "أملو", "إغيل علي", "أدكار", "بني كسيلة", "تالة حمزة", "سيدي عياد"],
-            "07 - بسكرة": ["بسكرة", "طولقة", "سيدي عقبة", "ليشانة", "زريبة الوادي", "الحوش", "عين الناقة", "القصور", "المزيرعة", "فوغال", "الفيض", "الحاجب", "القنطرة", "أوماش", "أولاد جلال"],
-            "08 - بشار": ["بشار", "بني ونيف", "العبادلة", "كرزاز", "تاغيت", "الواتة", "إقلي", "بني عباس", "أولاد سيدي الشيخ", "أولاد خضير", "القصابي"],
-            "09 - البليدة": ["البليدة", "بوفاريك", "الأربعاء", "وادي العلايق", "الشريعة", "حمام ملوان", "بني تامو", "الصومعة", "موزاية", "شفة", "العفرون", "أولاد يعيش", "الروراوة", "بن خليل", "سيدي موسى", "بوعرفة"],
-            "10 - البويرة": ["البويرة", "الأخضرية", "عين بسام", "بشلول", "الأربعاء", "بئر غبالو", "بوردج", "العجيبة", "الحجرة الزرقاء", "الهاشمية", "المعمورة", "وادي البردي"],
-            "11 - تمنراست": ["تمنراست", "عين قزام", "عين أمقل", "إدلس", "تاظروك", "سيلت", "عين غار"],
-            "12 - تبسة": ["تبسة", "بئر العاتر", "العوينات", "نقرين", "الماء الأبيض", "مرسط", "العقلة", "الشريعة", "صفصاف الوسرى", "بوقرن"],
-            "13 - تلمسان": ["تلمسان", "غريس", "سبدو", "عين تالوت", "صبرة", "الرمشي", "سيدي الجيلالي", "عين يوسف", "حمام بوغرارة", "عين فزة"],
-            "14 - تيارت": ["تيارت", "مدروة", "مهدية", "عين بوشقيف", "عين دزاريت", "قرطوفة", "سي عبد الغني", "وادي ليلي", "رحوية", "النعيمة"],
-            "15 - تيزي وزو": ["تيزي وزو", "عين الحمام", "أزفون", "مقلع", "واقنون", "إيفيغاء", "أزرو", "بعقبة", "بوجيمة", "تيزي راشد", "تيزي غنيف", "الأربعاء ناث إيراثن"],
-            "16 - الجزائر": ["الجزائر الوسطى", "القصبة", "حسين داي", "بئر مراد رايس", "باب الواد", "الرويبة", "بوزريعة", "زرالدة", "الدار البيضاء", "بئر خادم", "المحمدية", "الدرارية", "الجزائر الجديدة", "حيدرة", "حجرة حسين", "الواشنة", "الأبيار"],
-            "17 - الجلفة": ["الجلفة", "عين وسارة", "دار الشيوخ", "الشارف", "حد الصحاري", "عين الإبل", "مسعد", "زعفران", "القديد", "سيدي لعجال", "تعظميت", "فيض البطمة"],
-            "18 - جيجل": ["جيجل", "الميلية", "الطاهير", "القنار", "سيدي معروف", "الشقفة", "غبالة", "بوراوي بلهادف", "العوانة", "أم عبود", "زيامة منصورية", "السطارة"],
-            "19 - سطيف": ["سطيف", "عين أرنات", "عين ولمان", "عين آزال", "بئر العرش", "بوعنداس", "جميلة", "قنزات", "صالح باي", "القلتة الزرقاء", "حمام قرقور", "معاوية"],
-            "20 - سعيدة": ["سعيدة", "دوي ثايل", "أولاد إبراهيم", "سيدي عمر", "سيدي أحمد", "عين الحجر", "البيض", "يوب", "حدادة", "مشيرة"],
-            "21 - سكيكدة": ["سكيكدة", "الحروش", "ابن بسلة", "مشوار", "سيدي عبد العزيز", "العلمة", "برحال", "الطرشان"],
-            "22 - سيدي بلعباس": ["سيدي بلعباس", "تسالة", "مرين", "رأس الماء", "سيدي علي بوسيدي", "تلمون", "عين أدن", "مزاورو", "سيدي لحسن", "بطيوة", "سيدي إبراهيم", "حمام ريغة"],
-            "23 - عنابة": ["عنابة", "برحال", "الشرفة", "العنصر", "وادي العنب", "البوني", "الحجار", "سرايدي", "شطايبي", "تريعات"],
-            "24 - قالمة": ["قالمة", "هيليوبوليس", "وادي الزناتي", "بوشقوف", "عين بن بيضاء", "بومهرة", "حمام دباغ", "حمام النبايل", "لخزارة", "وادي فراغة"],
-            "25 - قسنطينة": ["قسنطينة", "الخروب", "زيغود يوسف", "عين سمارة", "حامة بوزيان", "درايس", "ابن زياد", "ابن باديس", "مليلية", "مروانة"],
-            "26 - المدية": ["المدية", "وزرة", "العزيزية", "الشيخ", "العيساوية", "تمسقيدة", "سيدي نعمان", "العمارية", "الكاف", "بوعيش", "أولاد عنتر", "أولاد هلال"],
-            "27 - مستغانم": ["مستغانم", "حجاج", "خير الدين", "مزغران", "عين تادلس", "سيدي علي", "بوقيراط", "الصفصاف", "عشعاشة", "خضرة", "ستيدية"],
-            "28 - المسيلة": ["المسيلة", "بوسعادة", "أولاد دراج", "سيدي عامر", "عين الحجل", "عين الملح", "حمام الضلعة", "الهامل", "مقرة", "أولاد ماضي", "سليم", "الخبانة"],
-            "29 - معسكر": ["معسكر", "سيق", "غريس", "وادي الأبطال", "زهانة", "ماوسطة", "مقطع دوز", "عين فراح", "البرج", "خليل", "المامونية", "قرجوم"],
-            "30 - ورقلة": ["ورقلة", "حاسي مسعود", "انقوسة", "الطيبات", "سيدي خويلد", "حاسي بن عبد الله", "العقلة", "بئر بير", "الرويسات", "النزلة"],
-            "31 - وهران": ["وهران", "بئر الجير", "الأبيار", "سانيا", "عين الترك", "قديل", "بطيوة", "أرزيو", "حاسي بونيف", "الكرمة", "بوسفر", "بوتليليس", "سيدي الشحمي"],
-            "32 - البيض": ["البيض", "بوقطب", "الغاسول", "الأبيض", "بريزينة", "الشقيق", "الخيثر", "كراكدة", "رأس الماء", "بوسمغون"],
-            "33 - إليزي": ["إليزي", "جانت", "برج عمر إدريس", "إن أميناس"],
-            "34 - برج بوعريريج": ["برج بوعريريج", "رأس الوادي", "برج زمورة", "الحمادية", "الميلية", "عين تاغروت", "غيلاسة", "المعاصم", "مجانة", "المنصورة"],
-            "35 - بومرداس": ["بومرداس", "بودواو", "بغلية", "الثنية", "دلس", "زموري", "الناصرية", "يسر", "أوقاس", "خميس الخشنة"],
-            "36 - الطارف": ["الطارف", "بن مهيدي", "البسباس", "بوحجار", "الطارف", "العيون", "زريزر", "الشط", "عين العسل", "الذرعان"],
-            "37 - تندوف": ["تندوف", "أوم العير"],
-            "38 - تيسمسيلت": ["تيسمسيلت", "برج بونعامة", "لرجام", "ثنية الحد", "الأزهرية", "عميرة", "بني شعيب", "سيدي بوتشنت", "سيدي عابد", "تملاحت"],
-            "39 - الوادي": ["الوادي", "البياضة", "رباح", "الرقيبة", "حساني عبد الكريم", "قمار", "المقرن", "اميه وانسة", "سطيل", "تغزوت"],
-            "40 - خنشلة": ["خنشلة", "قايس", "بغاي", "شلية", "الحامة", "عين الطويلة", "يابوس", "الولجة", "المحمل", "ام العظائم"],
-            "41 - سوق أهراس": ["سوق أهراس", "سدراتة", "المراهنة", "تاورة", "الزوابي", "الحدادة", "الخضارة", "أولاد إدريس", "الزعرور", "الطاية"],
-            "42 - تيبازة": ["تيبازة", "شرشال", "ددامس", "فوكة", "بوفاريك", "القليعة", "حجوط", "سيدي راشد", "عين تاقورايت", "مسلمون", "سيدي سميان", "بوهارون", "خميستي"],
-            "43 - ميلة": ["ميلة", "فرجيوة", "شلغوم العيد", "تاجنانت", "عين البيضاء", "سيدي مروان", "التلاغمة", "ترعي باينان", "أولاد اخلوف", "الرواشد"],
-            "44 - عين الدفلى": ["عين الدفلى", "مليانة", "بومدفع", "العامرة", "برج الأمير خالد", "جندل", "العبادية", "عين لشياخ", "الحسينية", "روينة"],
-            "45 - النعامة": ["النعامة", "مغرار", "عين الصفراء", "عين بن خليل", "مكمن بن عمار", "الصفصاف", "المشرية", "سفيسيفة", "عسلة"],
-            "46 - عين تموشنت": ["عين تموشنت", "حمام بوحجر", "بني صاف", "العين", "الأمير عبد القادر", "عين الأربعاء", "الأمير", "سيدي بن عدة", "حاسي الغلة", "بوجبهور البرج"],
-            "47 - غرداية": ["غرداية", "متليلي", "المنيعة", "ضاية بن ضحوة", "بونورة", "القرارة", "بريان", "أقلي", "حاسي القارة", "زلفانة"],
-            "48 - غليزان": ["غليزان", "وادي رهيو", "الحمادنة", "عمي موسى", "عين طارق", "القلعة", "منداس", "وزرة", "سيدي سعادة", "بني درقن"],
-            "49 - توقرت": ["توقرت", "تماسين", "الطيبات", "الخبرة", "مغيلة", "النزلة"],
-            "50 - جانت": ["جانت", "برج الحواس", "إيليزي"],
-            "51 - المغير": ["المغير", "سطيل", "جامعة", "المنقر", "النخلة", "الزويرات"],
-            "52 - المنيعة": ["المنيعة", "حاسي الفحل", "الغرارة", "بونوارة", "المطارفة", "العقلة"],
-            "53 - عين صالح": ["عين صالح", "إن غار", "تيمياوين", "أقبيل", "المطارفة", "السبع"],
-            "54 - عين قزام": ["عين قزام", "تين زواتين", "إيسين", "أمقيد", "أنغول", "تارك"],
-            "55 - برج باجي مختار": ["برج باجي مختار", "تيمياوين", "المالكية", "السبع", "العوينات"],
-            "56 - بني عباس": ["بني عباس", "تيمودي", "القصابي", "المطارفة", "تاغيت", "كرزاز"],
-            "57 - أولاد جلال": ["أولاد جلال", "الفيض", "الحاجب", "المزيرعة", "بسكرة", "طولقة"],
-            "58 - إن صالح": ["إن صالح", "عين صالح", "تيمياوين", "المطارفة", "السبع", "العوينات"]
-        };
-
-        // ملء الولايات
-        const wilayas = Object.keys(communesParWilaya);
-        wilayas.forEach(w => {
-            const opt = document.createElement('option');
-            opt.value = w; opt.textContent = w;
-            document.getElementById('state').appendChild(opt);
-        });
-
-        // تغيير البلديات حسب الولاية
-        document.getElementById('state').addEventListener('change', function () {
-            const wilaya = this.value;
-            const communeSelect = document.getElementById('commune');
-            communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
-            if (wilaya && communesParWilaya[wilaya]) {
-                communesParWilaya[wilaya].sort().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c; opt.textContent = c;
-                    communeSelect.appendChild(opt);
-                });
-            }
-            validateForm();
-        });
-
-        // خطوات الفورم
-        function nextStep(n) {
-            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + n).classList.add('active');
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + n + '-indicator').classList.add('active');
-        }
-        function prevStep(n) { nextStep(n); }
-
-        // التحقق من الحقول
-        function validateForm() {
-            const fields = ['phone', 'state', 'commune', 'groomName', 'brideName', 'weddingYear', 'weddingMonth', 'weddingDay', 'color'];
-            const allFilled = fields.every(id => document.getElementById(id).value.trim() !== '');
-            document.getElementById('submitBtn').disabled = !allFilled;
-        }
-        document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', validateForm));
-
-        // المؤقت
-        let timeLeft = 24 * 60 * 60;
-        setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                const h = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
-                const m = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
-                const s = String(timeLeft % 60).padStart(2, '0');
-                document.getElementById('hours').textContent = h;
-                document.getElementById('minutes').textContent = m;
-                document.getElementById('seconds').textContent = s;
-            }
-        }, 1000);
-
-        // عدد الشهادات المتبقية
-        let stock = 17;
-        setInterval(() => { if (stock > 5) { stock--; document.getElementById('stock-count').textContent = stock; } }, 60000);
-
-        // إرسال إلى Google Sheet
-        document.getElementById('orderForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true; submitBtn.textContent = 'جاري الإرسال...';
-
-            const year = document.getElementById('weddingYear').value;
-            const month = document.getElementById('weddingMonth').value;
-            const day = document.getElementById('weddingDay').value.padStart(2, '0');
-            const weddingDate = `${year}/${month}/${day}`;
-
-            const formData = new FormData();
-            formData.append('phone', '="' + document.getElementById('phone').value + '"');
-            formData.append('state', document.getElementById('state').value);
-            formData.append('commune', document.getElementById('commune').value);
-            formData.append('groomName', document.getElementById('groomName').value);
-            formData.append('brideName', document.getElementById('brideName').value);
-            formData.append('weddingDate', weddingDate);
-            formData.append('color', document.getElementById('color').value);
-            formData.append('timestamp', new Date().toLocaleString('ar-DZ'));
-
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzjJbi5Os7_b0xydyo59DmhDFx2BimGiWa8BUMSBZZRwsvsbOUd601beJQul4IktzLo/exec', {
-                    method: 'POST',
-                    body: formData
-                });
-                if (response.ok) {
-                    document.getElementById('successMessage').classList.add('show');
-                    this.reset();
-                    document.getElementById('commune').innerHTML = '<option value="">اختر الولاية أولاً</option>';
-                    setTimeout(() => document.getElementById('successMessage').classList.remove('show'), 8000);
-                }
-            } catch (err) {
-                alert('فشل الإرسال، تأكد من الاتصال');
-            } finally {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'اطلب الآن بـ 1800 دج فقط';
-                validateForm();
-            }
-        });
-
-        // Exit Intent Popup
-        let mouseLeft = false;
-        document.addEventListener('mouseleave', () => {
-            if (!mouseLeft) {
-                document.getElementById('exitPopup').classList.add('show');
-                mouseLeft = true;
-            }
-        });
-    </script>
+    <script src="scripts/script.js"></script>
 </body>
 
 
 </html>
-
