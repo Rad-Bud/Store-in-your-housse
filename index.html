@@ -878,11 +878,34 @@
     </div>
 
     <script src="scripts/script.js"></script>
+    <script>
+// عند فتح الفورم (الخطوة 3)
+function moveStep(stepNumber) {
+    // ... كودك الموجود
+    
+    if (stepNumber === 3) {
+        fbq('track', 'InitiateCheckout', {
+            value: 1800,
+            currency: 'DZD'
+        });
+    }
+}
+
+// عند الضغط على "اطلب الآن"
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    fbq('track', 'Purchase', {
+        value: 1800,
+        currency: 'DZD'
+    });
+});
+</script>
+
 </body>
 
 
 
 </html>
+
 
 
 
