@@ -1,5 +1,6 @@
 
 // قاعدة بيانات الولايات والبلديات كاملة
+// قاعدة بيانات الولايات والبلديات كاملة
 const communesParWilaya = {
     "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
     "02 - الشلف": ["الشلف", "تنس", "بني حواء", "أبو الحسن", "هرنفة", "وادي الفضة", "الكريمية", "المرسى", "وادي سلي", "أولاد فارس", "الصبحة", "بوزغاية", "الزبوجة", "تاجنة", "عين مران", "بناي يعقوب", "الأربعاء", "الخميس"],
@@ -65,7 +66,8 @@ const communesParWilaya = {
 const wilayas = Object.keys(communesParWilaya);
 wilayas.forEach(w => {
     const opt = document.createElement('option');
-    opt.value = w; opt.textContent = w;
+    opt.value = w;
+    opt.textContent = w;
     document.getElementById('state').appendChild(opt);
 });
 
@@ -77,7 +79,8 @@ document.getElementById('state').addEventListener('change', function () {
     if (wilaya && communesParWilaya[wilaya]) {
         communesParWilaya[wilaya].sort().forEach(c => {
             const opt = document.createElement('option');
-            opt.value = c; opt.textContent = c;
+            opt.value = c;
+            opt.textContent = c;
             communeSelect.appendChild(opt);
         });
     }
@@ -89,7 +92,6 @@ function field(id) {
 }
 
 function moveStep(n) {
-
     // Step 1 → Step 2 (validate phone)
     if (n === 2) {
         if (!validatePhone()) {
@@ -109,6 +111,18 @@ function moveStep(n) {
             });
             return;
         }
+        
+        // ❗❗❗ المهم جداً: إرسال حدث InitiateCheckout مع العملة
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'InitiateCheckout', {
+                value: 1800,
+                currency: 'DZD',
+                content_name: 'شهادة زواج فاخرة',
+                content_category: 'certificates',
+                content_ids: ['certificate_wedding']
+            });
+            console.log('✅ InitiateCheckout event sent');
+        }
     }
 
     // Switch steps
@@ -125,7 +139,7 @@ function validate(fields) {
             return false;
         }
     }
-    return true; // ✔ important
+    return true;
 }
 
 // Extra validation for phone with regex
@@ -135,13 +149,13 @@ function validatePhone() {
     return regex.test(phone);
 }
 
-
 // التحقق من الحقول
 function validateForm() {
-    fields = ['phone', 'state', 'commune', 'groomName', 'brideName', 'weddingYear', 'weddingMonth', 'weddingDay', 'color']
-    const allFilled = validate(fields)
+    const fields = ['phone', 'state', 'commune', 'groomName', 'brideName', 'weddingYear', 'weddingMonth', 'weddingDay', 'color'];
+    const allFilled = validate(fields);
     document.getElementById('submitBtn').disabled = !allFilled;
 }
+
 document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', validateForm));
 
 // المؤقت
@@ -158,20 +172,18 @@ setInterval(() => {
     }
 }, 1000);
 
-// عدد الشهادات المتبقية
-let stock = 17;
-setInterval(() => { if (stock > 5) { stock--; document.getElementById('stock-count').textContent = stock; } }, 60000);
-
 // إرسال إلى Google Sheet
 document.getElementById('orderForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     const submitBtn = document.getElementById('submitBtn');
-    submitBtn.disabled = true; submitBtn.textContent = 'جاري الإرسال...';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الإرسال...';
 
     const year = document.getElementById('weddingYear').value;
     const month = document.getElementById('weddingMonth').value;
     const day = document.getElementById('weddingDay').value.padStart(2, '0');
     const weddingDate = `${year}/${month}/${day}`;
+    const color = document.getElementById('color').value;
 
     const formData = new FormData();
     formData.append('phone', '="' + document.getElementById('phone').value + '"');
@@ -180,22 +192,40 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     formData.append('groomName', document.getElementById('groomName').value);
     formData.append('brideName', document.getElementById('brideName').value);
     formData.append('weddingDate', weddingDate);
-    formData.append('color', document.getElementById('color').value);
+    formData.append('color', color);
     formData.append('timestamp', new Date().toLocaleString('ar-DZ'));
+
+    // ❗❗❗ المهم جداً: إرسال حدث Purchase مع العملة قبل إرسال البيانات
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'Purchase', {
+            value: 1800,
+            currency: 'DZD',
+            content_name: 'شهادة زواج فاخرة - ' + color,
+            content_ids: ['certificate_' + Date.now()],
+            content_type: 'product',
+            num_items: 1
+        });
+        console.log('✅ Purchase event sent');
+    }
 
     try {
         const response = await fetch('https://script.google.com/macros/s/AKfycbzjJbi5Os7_b0xydyo59DmhDFx2BimGiWa8BUMSBZZRwsvsbOUd601beJQul4IktzLo/exec', {
             method: 'POST',
             body: formData
         });
+        
         if (response.ok) {
             document.getElementById('successMessage').classList.add('show');
             this.reset();
             document.getElementById('commune').innerHTML = '<option value="">اختر الولاية أولاً</option>';
-            setTimeout(() => document.getElementById('successMessage').classList.remove('show'), 8000);
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+                moveStep(1);
+            }, 8000);
         }
     } catch (err) {
         alert('فشل الإرسال، تأكد من الاتصال');
+        console.error('Error:', err);
     } finally {
         submitBtn.disabled = true;
         submitBtn.textContent = 'اطلب الآن بـ 1800 دج فقط';
