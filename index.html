@@ -275,13 +275,29 @@
         }
 
         .gallery-img {
-            width: 300px;
-            height: 380px;
-            border-radius: 15px;
+            width: 320px;
+            max-width: 95%;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            transition: transform .3s;
-            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            background: linear-gradient(45deg, #d4af37, #ffd700);
+            padding: 4px;
+            /* إطار ذهبي خارجي رقيق */
+        }
+
+        .gallery-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            background: white;
+            padding: 20px;
+            /* مسافة داخلية فخمة */
+            box-sizing: border-box;
+            object-fit: contain;
+            max-height: 480px;
+            /* لتجنب أن تصبح الصور طويلة جدًا على الموبايل */
         }
 
         .gallery-img:hover {
@@ -893,4 +909,3 @@
 
 
 </html>
-
