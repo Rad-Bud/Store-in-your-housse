@@ -60,7 +60,7 @@ const communesParWilaya = {
     "58 - إن صالح": ["إن صالح", "عين صالح", "تيمياوين", "المطارفة", "السبع", "العوينات"]
 };
 
-// ملء الولايات
+// تعبئة الولايات
 const wilayas = Object.keys(communesParWilaya);
 wilayas.forEach(w => {
     const opt = document.createElement('option');
@@ -74,6 +74,7 @@ document.getElementById('state').addEventListener('change', function () {
     const wilaya = this.value;
     const communeSelect = document.getElementById('commune');
     communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
+
     if (wilaya && communesParWilaya[wilaya]) {
         communesParWilaya[wilaya].sort().forEach(c => {
             const opt = document.createElement('option');
@@ -82,14 +83,17 @@ document.getElementById('state').addEventListener('change', function () {
             communeSelect.appendChild(opt);
         });
     }
+
     validateForm();
 });
 
+// Functions
 function field(id) {
     return document.getElementById(id);
 }
 
 function moveStep(n) {
+
     // Step 1 → Step 2 (validate phone)
     if (n === 2) {
         if (!validatePhone()) {
@@ -109,21 +113,11 @@ function moveStep(n) {
             });
             return;
         }
-        
-        // ❗❗❗ المهم جداً: إرسال حدث InitiateCheckout مع العملة
-        if (typeof fbq !== 'undefined') {
-            fbq('track', 'InitiateCheckout', {
-                value: 1800,
-                currency: 'DZD',
-                content_name: 'شهادة زواج فاخرة',
-                content_category: 'certificates',
-                content_ids: ['certificate_wedding']
-            });
-            console.log('✅ InitiateCheckout event sent');
-        }
+
+        // ⛔ لا ترسل InitiateCheckout هنا
     }
 
-    // Switch steps
+    // Switch steps visually
     document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + n).classList.add('active');
 
@@ -149,12 +143,20 @@ function validatePhone() {
 
 // التحقق من الحقول
 function validateForm() {
-    const fields = ['phone', 'state', 'commune', 'groomName', 'brideName', 'weddingYear', 'weddingMonth', 'weddingDay', 'color'];
+    const fields = [
+        'phone', 'state', 'commune', 
+        'groomName', 'brideName', 
+        'weddingYear', 'weddingMonth', 'weddingDay', 
+        'color'
+    ];
+
     const allFilled = validate(fields);
     document.getElementById('submitBtn').disabled = !allFilled;
 }
 
-document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', validateForm));
+document.querySelectorAll('input, select').forEach(el =>
+    el.addEventListener('input', validateForm)
+);
 
 // المؤقت
 let timeLeft = 24 * 60 * 60;
@@ -170,19 +172,36 @@ setInterval(() => {
     }
 }, 1000);
 
-// إرسال إلى Google Sheet
+
+// إرسال إلى Google Sheet + إرسال InitiateCheckout الصحيح
 document.getElementById('orderForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
     submitBtn.textContent = 'جاري الإرسال...';
 
+    // ⬅️ إرسال InitiateCheckout هنا فقط (صح)
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+            value: 1800,
+            currency: 'DZD',
+            content_name: 'شهادة زواج فاخرة',
+            content_category: 'certificates',
+            content_ids: ['certificate_wedding']
+        });
+        console.log('🔥 InitiateCheckout event sent successfully');
+    }
+
+    // تجهيز التاريخ
     const year = document.getElementById('weddingYear').value;
     const month = document.getElementById('weddingMonth').value;
     const day = document.getElementById('weddingDay').value.padStart(2, '0');
     const weddingDate = `${year}/${month}/${day}`;
+
     const color = document.getElementById('color').value;
 
+    // Google Sheet FormData
     const formData = new FormData();
     formData.append('phone', '="' + document.getElementById('phone').value + '"');
     formData.append('state', document.getElementById('state').value);
@@ -191,51 +210,22 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     formData.append('brideName', document.getElementById('brideName').value);
     formData.append('weddingDate', weddingDate);
     formData.append('color', color);
-    formData.append('timestamp', new Date().toLocaleString('ar-DZ'));
 
-    // ❗❗❗ المهم جداً: إرسال حدث Purchase مع العملة قبل إرسال البيانات
-    if (typeof fbq !== 'undefined') {
-        fbq('track', 'Purchase', {
-            value: 1800,
-            currency: 'DZD',
-            content_name: 'شهادة زواج فاخرة - ' + color,
-            content_ids: ['certificate_' + Date.now()],
-            content_type: 'product',
-            num_items: 1
-        });
-        console.log('✅ Purchase event sent');
-    }
-
+    // إرسال إلى Google Apps Script
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzjJbi5Os7_b0xydyo59DmhDFx2BimGiWa8BUMSBZZRwsvsbOUd601beJQul4IktzLo/exec', {
+        await fetch('YOUR_GOOGLE_SCRIPT_URL_HERE', {
             method: 'POST',
             body: formData
         });
-        
-        if (response.ok) {
-            document.getElementById('successMessage').classList.add('show');
-            this.reset();
-            document.getElementById('commune').innerHTML = '<option value="">اختر الولاية أولاً</option>';
-            setTimeout(() => {
-                document.getElementById('successMessage').classList.remove('show');
-                moveStep(1);
-            }, 8000);
-        }
-    } catch (err) {
-        alert('فشل الإرسال، تأكد من الاتصال');
-        console.error('Error:', err);
-    } finally {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'اطلب الآن بـ 1800 دج فقط';
-        validateForm();
+
+        submitBtn.textContent = 'تم إرسال الطلب ✔';
+
+        // يمكن إضافة Purchase هنا لو عندك صفحة نجاح
+        // fbq('track', 'Purchase', {value: 1800, currency: 'DZD'});
+
+    } catch (error) {
+        submitBtn.textContent = 'حدث خطأ، حاول مجددًا ❌';
+        console.error(error);
     }
 });
 
-// Exit Intent Popup
-let mouseLeft = false;
-document.addEventListener('mouseleave', () => {
-    if (!mouseLeft) {
-        document.getElementById('exitPopup').classList.add('show');
-        mouseLeft = true;
-    }
-});
