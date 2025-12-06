@@ -184,8 +184,8 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     // ⬅️ إرسال InitiateCheckout هنا فقط (صح)
     if (typeof fbq !== 'undefined') {
         fbq('track', 'InitiateCheckout', {
-            value: 1800,
-            currency: 'DZD',
+            value: 7,
+            currency: 'USD',
             content_name: 'شهادة زواج فاخرة',
             content_category: 'certificates',
             content_ids: ['certificate_wedding']
@@ -221,7 +221,7 @@ document.getElementById('orderForm').addEventListener('submit', async function (
         submitBtn.textContent = 'تم إرسال الطلب ✔';
 
         // يمكن إضافة Purchase هنا لو عندك صفحة نجاح
-        // fbq('track', 'Purchase', {value: 1800, currency: 'DZD'});
+        // fbq('track', 'Purchase', {value: 1800, currency: 'USD'});
 
     } catch (error) {
         submitBtn.textContent = 'حدث خطأ، حاول مجددًا ❌';
