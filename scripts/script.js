@@ -213,7 +213,7 @@ document.getElementById('orderForm').addEventListener('submit', async function (
 
     // إرسال إلى Google Apps Script
     try {
-        await fetch('YOUR_GOOGLE_SCRIPT_URL_HERE', {
+        await fetch('https://script.google.com/macros/s/AKfycbzjJbi5Os7_b0xydyo59DmhDFx2BimGiWa8BUMSBZZRwsvsbOUd601beJQul4IktzLo/exec', {
             method: 'POST',
             body: formData
         });
