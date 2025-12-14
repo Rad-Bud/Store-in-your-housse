@@ -181,17 +181,7 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     submitBtn.disabled = true;
     submitBtn.textContent = 'جاري الإرسال...';
 
-    // ⬅️ إرسال InitiateCheckout هنا فقط (صح)
-    if (typeof fbq !== 'undefined') {
-        fbq('track', 'InitiateCheckout', {
-            value: 7,
-            currency: 'USD',
-            content_name: 'شهادة زواج فاخرة',
-            content_category: 'certificates',
-            content_ids: ['certificate_wedding']
-        });
-        console.log('🔥 InitiateCheckout event sent successfully');
-    }
+
 
     // تجهيز التاريخ
     const year = document.getElementById('weddingYear').value;
