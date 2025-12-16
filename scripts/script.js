@@ -106,8 +106,8 @@ function moveStep(n) {
 
     // Step 2 → Step 3 (validate state + commune)
     if (n === 3) {
-        if (!validate(["state", "commune"])) {
-            ["state", "commune"].forEach(id => {
+        if (!validate(["state", "commune", "address"])) {
+            ["state", "commune", "address"].forEach(id => {
                 const valid = field(id).value.trim() !== "";
                 field(id).style.border = valid ? "" : "2px #ff0000 solid";
             });
@@ -144,9 +144,9 @@ function validatePhone() {
 // التحقق من الحقول
 function validateForm() {
     const fields = [
-        'phone', 'state', 'commune', 
-        'groomName', 'brideName', 
-        'weddingYear', 'weddingMonth', 'weddingDay', 
+        'phone', 'state', 'commune', 'address',
+        'groomName', 'brideName',
+        'weddingYear', 'weddingMonth', 'weddingDay',
         'color'
     ];
 
@@ -201,9 +201,14 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     formData.append('weddingDate', weddingDate);
     formData.append('color', color);
 
+    // New Fields
+    formData.append('address', document.getElementById('address').value);
+    const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+    formData.append('deliveryType', deliveryType);
+
     // إرسال إلى Google Apps Script
     try {
-        await fetch('https://script.google.com/macros/s/AKfycbzjJbi5Os7_b0xydyo59DmhDFx2BimGiWa8BUMSBZZRwsvsbOUd601beJQul4IktzLo/exec', {
+        await fetch('https://script.google.com/macros/s/AKfycby8U0Sebyw3msKLeTW1VImHK1Z0ut3uZzm9bYtvduSxoH7ZezU3FntHQbK6R8ilk5nR/exec', {
             method: 'POST',
             body: formData
         });
