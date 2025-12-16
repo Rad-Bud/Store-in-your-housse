@@ -1,911 +1,226 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+// قاعدة بيانات الولايات والبلديات كاملة
+const communesParWilaya = {
+    "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
+    "02 - الشلف": ["الشلف", "تنس", "بني حواء", "أبو الحسن", "هرنفة", "وادي الفضة", "الكريمية", "المرسى", "وادي سلي", "أولاد فارس", "الصبحة", "بوزغاية", "الزبوجة", "تاجنة", "عين مران", "بناي يعقوب", "الأربعاء", "الخميس"],
+    "03 - الأغواط": ["الأغواط", "بريزينة", "عين ماضي", "الحاج المكي", "الغيشة", "سيدي بوزيد", "قصر الحيران", "الرقيبة", "تاجموت", "عين سيدي علي", "البيضاء", "تاويالة", "الخنق", "الرملة", "سبقاق", "حاسي الدلاعة", "وادي مرة", "العسافية"],
+    "04 - أم البواقي": ["أم البواقي", "عين البيضاء", "عين مليلة", "سيقوس", "عين فكرون", "عين كرشة", "الحرميلية", "الضلعة", "عين ببوش", "البرج", "أولاد حملة", "الفجوج", "القيقبة", "الزرقاء", "بئر الشهداء", "عين الزيتون"],
+    "05 - باتنة": ["باتنة", "بريكة", "رأس العيون", "عين التوتة", "مروانة", "سريانة", "منعة", "تازولت", "المعذر", "أولاد سي سليمان", "تيمقاد", "عين ياقوت", "فسديس", "تكوت", "الجزار", "أريس", "شير", "نقاوس", "الحاسي", "تالخمت"],
+    "06 - بجاية": ["بجاية", "أقبو", "سيدي عيش", "القصر", "أوزلاقن", "تيشي", "صدوق", "الدريات", "تاوريرت إغيل", "شميني", "سوق أوفلا", "تيزي نثلاثة", "أملو", "إغيل علي", "أدكار", "بني كسيلة", "تالة حمزة", "سيدي عياد"],
+    "07 - بسكرة": ["بسكرة", "طولقة", "سيدي عقبة", "ليشانة", "زريبة الوادي", "الحوش", "عين الناقة", "القصور", "المزيرعة", "فوغال", "الفيض", "الحاجب", "القنطرة", "أوماش", "أولاد جلال"],
+    "08 - بشار": ["بشار", "بني ونيف", "العبادلة", "كرزاز", "تاغيت", "الواتة", "إقلي", "بني عباس", "أولاد سيدي الشيخ", "أولاد خضير", "القصابي"],
+    "09 - البليدة": ["البليدة", "بوفاريك", "الأربعاء", "وادي العلايق", "الشريعة", "حمام ملوان", "بني تامو", "الصومعة", "موزاية", "شفة", "العفرون", "أولاد يعيش", "الروراوة", "بن خليل", "سيدي موسى", "بوعرفة"],
+    "10 - البويرة": ["البويرة", "الأخضرية", "عين بسام", "بشلول", "الأربعاء", "بئر غبالو", "بوردج", "العجيبة", "الحجرة الزرقاء", "الهاشمية", "المعمورة", "وادي البردي"],
+    "11 - تمنراست": ["تمنراست", "عين قزام", "عين أمقل", "إدلس", "تاظروك", "سيلت", "عين غار"],
+    "12 - تبسة": ["تبسة", "بئر العاتر", "العوينات", "نقرين", "الماء الأبيض", "مرسط", "العقلة", "الشريعة", "صفصاف الوسرى", "بوقرن"],
+    "13 - تلمسان": ["تلمسان", "غريس", "سبدو", "عين تالوت", "صبرة", "الرمشي", "سيدي الجيلالي", "عين يوسف", "حمام بوغرارة", "عين فزة"],
+    "14 - تيارت": ["تيارت", "مدروة", "مهدية", "عين بوشقيف", "عين دزاريت", "قرطوفة", "سي عبد الغني", "وادي ليلي", "رحوية", "النعيمة"],
+    "15 - تيزي وزو": ["تيزي وزو", "عين الحمام", "أزفون", "مقلع", "واقنون", "إيفيغاء", "أزرو", "بعقبة", "بوجيمة", "تيزي راشد", "تيزي غنيف", "الأربعاء ناث إيراثن"],
+    "16 - الجزائر": ["الجزائر الوسطى", "القصبة", "حسين داي", "بئر مراد رايس", "باب الواد", "الرويبة", "بوزريعة", "زرالدة", "الدار البيضاء", "بئر خادم", "المحمدية", "الدرارية", "الجزائر الجديدة", "حيدرة", "حجرة حسين", "الواشنة", "الأبيار"],
+    "17 - الجلفة": ["الجلفة", "عين وسارة", "دار الشيوخ", "الشارف", "حد الصحاري", "عين الإبل", "مسعد", "زعفران", "القديد", "سيدي لعجال", "تعظميت", "فيض البطمة"],
+    "18 - جيجل": ["جيجل", "الميلية", "الطاهير", "القنار", "سيدي معروف", "الشقفة", "غبالة", "بوراوي بلهادف", "العوانة", "أم عبود", "زيامة منصورية", "السطارة"],
+    "19 - سطيف": ["سطيف", "عين أرنات", "عين ولمان", "عين آزال", "بئر العرش", "بوعنداس", "جميلة", "قنزات", "صالح باي", "القلتة الزرقاء", "حمام قرقور", "معاوية"],
+    "20 - سعيدة": ["سعيدة", "دوي ثايل", "أولاد إبراهيم", "سيدي عمر", "سيدي أحمد", "عين الحجر", "البيض", "يوب", "حدادة", "مشيرة"],
+    "21 - سكيكدة": ["سكيكدة", "الحروش", "ابن بسلة", "مشوار", "سيدي عبد العزيز", "العلمة", "برحال", "الطرشان"],
+    "22 - سيدي بلعباس": ["سيدي بلعباس", "تسالة", "مرين", "رأس الماء", "سيدي علي بوسيدي", "تلمون", "عين أدن", "مزاورو", "سيدي لحسن", "بطيوة", "سيدي إبراهيم", "حمام ريغة"],
+    "23 - عنابة": ["عنابة", "برحال", "الشرفة", "العنصر", "وادي العنب", "البوني", "الحجار", "سرايدي", "شطايبي", "تريعات"],
+    "24 - قالمة": ["قالمة", "هيليوبوليس", "وادي الزناتي", "بوشقوف", "عين بن بيضاء", "بومهرة", "حمام دباغ", "حمام النبايل", "لخزارة", "وادي فراغة"],
+    "25 - قسنطينة": ["قسنطينة", "الخروب", "زيغود يوسف", "عين سمارة", "حامة بوزيان", "درايس", "ابن زياد", "ابن باديس", "مليلية", "مروانة"],
+    "26 - المدية": ["المدية", "وزرة", "العزيزية", "الشيخ", "العيساوية", "تمسقيدة", "سيدي نعمان", "العمارية", "الكاف", "بوعيش", "أولاد عنتر", "أولاد هلال"],
+    "27 - مستغانم": ["مستغانم", "حجاج", "خير الدين", "مزغران", "عين تادلس", "سيدي علي", "بوقيراط", "الصفصاف", "عشعاشة", "خضرة", "ستيدية"],
+    "28 - المسيلة": ["المسيلة", "بوسعادة", "أولاد دراج", "سيدي عامر", "عين الحجل", "عين الملح", "حمام الضلعة", "الهامل", "مقرة", "أولاد ماضي", "سليم", "الخبانة"],
+    "29 - معسكر": ["معسكر", "سيق", "غريس", "وادي الأبطال", "زهانة", "ماوسطة", "مقطع دوز", "عين فراح", "البرج", "خليل", "المامونية", "قرجوم"],
+    "30 - ورقلة": ["ورقلة", "حاسي مسعود", "انقوسة", "الطيبات", "سيدي خويلد", "حاسي بن عبد الله", "العقلة", "بئر بير", "الرويسات", "النزلة"],
+    "31 - وهران": ["وهران", "بئر الجير", "الأبيار", "سانيا", "عين الترك", "قديل", "بطيوة", "أرزيو", "حاسي بونيف", "الكرمة", "بوسفر", "بوتليليس", "سيدي الشحمي"],
+    "32 - البيض": ["البيض", "بوقطب", "الغاسول", "الأبيض", "بريزينة", "الشقيق", "الخيثر", "كراكدة", "رأس الماء", "بوسمغون"],
+    "33 - إليزي": ["إليزي", "جانت", "برج عمر إدريس", "إن أميناس"],
+    "34 - برج بوعريريج": ["برج بوعريريج", "رأس الوادي", "برج زمورة", "الحمادية", "الميلية", "عين تاغروت", "غيلاسة", "المعاصم", "مجانة", "المنصورة"],
+    "35 - بومرداس": ["بومرداس", "بودواو", "بغلية", "الثنية", "دلس", "زموري", "الناصرية", "يسر", "أوقاس", "خميس الخشنة"],
+    "36 - الطارف": ["الطارف", "بن مهيدي", "البسباس", "بوحجار", "الطارف", "العيون", "زريزر", "الشط", "عين العسل", "الذرعان"],
+    "37 - تندوف": ["تندوف", "أوم العير"],
+    "38 - تيسمسيلت": ["تيسمسيلت", "برج بونعامة", "لرجام", "ثنية الحد", "الأزهرية", "عميرة", "بني شعيب", "سيدي بوتشنت", "سيدي عابد", "تملاحت"],
+    "39 - الوادي": ["الوادي", "البياضة", "رباح", "الرقيبة", "حساني عبد الكريم", "قمار", "المقرن", "اميه وانسة", "سطيل", "تغزوت"],
+    "40 - خنشلة": ["خنشلة", "قايس", "بغاي", "شلية", "الحامة", "عين الطويلة", "يابوس", "الولجة", "المحمل", "ام العظائم"],
+    "41 - سوق أهراس": ["سوق أهراس", "سدراتة", "المراهنة", "تاورة", "الزوابي", "الحدادة", "الخضارة", "أولاد إدريس", "الزعرور", "الطاية"],
+    "42 - تيبازة": ["تيبازة", "شرشال", "ددامس", "فوكة", "بوفاريك", "القليعة", "حجوط", "سيدي راشد", "عين تاقورايت", "مسلمون", "سيدي سميان", "بوهارون", "خميستي"],
+    "43 - ميلة": ["ميلة", "فرجيوة", "شلغوم العيد", "تاجنانت", "عين البيضاء", "سيدي مروان", "التلاغمة", "ترعي باينان", "أولاد اخلوف", "الرواشد"],
+    "44 - عين الدفلى": ["عين الدفلى", "مليانة", "بومدفع", "العامرة", "برج الأمير خالد", "جندل", "العبادية", "عين لشياخ", "الحسينية", "روينة"],
+    "45 - النعامة": ["النعامة", "مغرار", "عين الصفراء", "عين بن خليل", "مكمن بن عمار", "الصفصاف", "المشرية", "سفيسيفة", "عسلة"],
+    "46 - عين تموشنت": ["عين تموشنت", "حمام بوحجر", "بني صاف", "العين", "الأمير عبد القادر", "عين الأربعاء", "الأمير", "سيدي بن عدة", "حاسي الغلة", "بوجبهور البرج"],
+    "47 - غرداية": ["غرداية", "متليلي", "المنيعة", "ضاية بن ضحوة", "بونورة", "القرارة", "بريان", "أقلي", "حاسي القارة", "زلفانة"],
+    "48 - غليزان": ["غليزان", "وادي رهيو", "الحمادنة", "عمي موسى", "عين طارق", "القلعة", "منداس", "وزرة", "سيدي سعادة", "بني درقن"],
+    "49 - توقرت": ["توقرت", "تماسين", "الطيبات", "الخبرة", "مغيلة", "النزلة"],
+    "50 - جانت": ["جانت", "برج الحواس", "إيليزي"],
+    "51 - المغير": ["المغير", "سطيل", "جامعة", "المنقر", "النخلة", "الزويرات"],
+    "52 - المنيعة": ["المنيعة", "حاسي الفحل", "الغرارة", "بونوارة", "المطارفة", "العقلة"],
+    "53 - عين صالح": ["عين صالح", "إن غار", "تيمياوين", "أقبيل", "المطارفة", "السبع"],
+    "54 - عين قزام": ["عين قزام", "تين زواتين", "إيسين", "أمقيد", "أنغول", "تارك"],
+    "55 - برج باجي مختار": ["برج باجي مختار", "تيمياوين", "المالكية", "السبع", "العوينات"],
+    "56 - بني عباس": ["بني عباس", "تيمودي", "القصابي", "المطارفة", "تاغيت", "كرزاز"],
+    "57 - أولاد جلال": ["أولاد جلال", "الفيض", "الحاجب", "المزيرعة", "بسكرة", "طولقة"],
+    "58 - إن صالح": ["إن صالح", "عين صالح", "تيمياوين", "المطارفة", "السبع", "العوينات"]
+};
+
+// تعبئة الولايات
+const wilayas = Object.keys(communesParWilaya);
+wilayas.forEach(w => {
+    const opt = document.createElement('option');
+    opt.value = w;
+    opt.textContent = w;
+    document.getElementById('state').appendChild(opt);
+});
+
+// تغيير البلديات حسب الولاية
+document.getElementById('state').addEventListener('change', function () {
+    const wilaya = this.value;
+    const communeSelect = document.getElementById('commune');
+    communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
+
+    if (wilaya && communesParWilaya[wilaya]) {
+        communesParWilaya[wilaya].sort().forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            communeSelect.appendChild(opt);
+        });
+    }
+
+    validateForm();
+});
+
+// Functions
+function field(id) {
+    return document.getElementById(id);
+}
+
+function moveStep(n) {
+
+    // Step 1 → Step 2 (validate phone)
+    if (n === 2) {
+        if (!validatePhone()) {
+            field("phone").style.border = "2px #ff0000 solid";
+            return;
+        } else {
+            field("phone").style.border = "";
+        }
+    }
+
+    // Step 2 → Step 3 (validate state + commune)
+    if (n === 3) {
+        if (!validate(["state", "commune", "address"])) {
+            ["state", "commune", "address"].forEach(id => {
+                const valid = field(id).value.trim() !== "";
+                field(id).style.border = valid ? "" : "2px #ff0000 solid";
+            });
+            return;
+        }
+
+        // ⛔ لا ترسل InitiateCheckout هنا
+    }
+
+    // Switch steps visually
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + n + '-indicator').classList.add('active');
+}
+
+function validate(fields) {
+    for (const id of fields) {
+        if (field(id).value.trim() === "") {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Extra validation for phone with regex
+function validatePhone() {
+    const phone = field("phone").value.trim();
+    const regex = /^(05|06|07)\d{8}$/;
+    return regex.test(phone);
+}
+
+// التحقق من الحقول
+function validateForm() {
+    const fields = [
+        'phone', 'state', 'commune', 'address',
+        'groomName', 'brideName',
+        'weddingYear', 'weddingMonth', 'weddingDay',
+        'color'
+    ];
+
+    const allFilled = validate(fields);
+    document.getElementById('submitBtn').disabled = !allFilled;
+}
+
+document.querySelectorAll('input, select').forEach(el =>
+    el.addEventListener('input', validateForm)
+);
+
+// المؤقت
+let timeLeft = 24 * 60 * 60;
+setInterval(() => {
+    if (timeLeft > 0) {
+        timeLeft--;
+        const h = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
+        const m = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
+        const s = String(timeLeft % 60).padStart(2, '0');
+        document.getElementById('hours').textContent = h;
+        document.getElementById('minutes').textContent = m;
+        document.getElementById('seconds').textContent = s;
+    }
+}, 1000);
+
+
+// إرسال إلى Google Sheet + إرسال InitiateCheckout الصحيح
+document.getElementById('orderForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الإرسال...';
+
+
+
+    // تجهيز التاريخ
+    const year = document.getElementById('weddingYear').value;
+    const month = document.getElementById('weddingMonth').value;
+    const day = document.getElementById('weddingDay').value.padStart(2, '0');
+    const weddingDate = `${year}/${month}/${day}`;
+
+    const color = document.getElementById('color').value;
+
+    // Google Sheet FormData
+    const formData = new FormData();
+    formData.append('phone', '="' + document.getElementById('phone').value + '"');
+    formData.append('state', document.getElementById('state').value);
+    formData.append('commune', document.getElementById('commune').value);
+    formData.append('groomName', document.getElementById('groomName').value);
+    formData.append('brideName', document.getElementById('brideName').value);
+    formData.append('weddingDate', weddingDate);
+    formData.append('color', color);
+
+    // New Fields
+    formData.append('address', document.getElementById('address').value);
+    const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+    formData.append('deliveryType', deliveryType);
+
+    // إرسال إلى Google Apps Script
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycby8U0Sebyw3msKLeTW1VImHK1Z0ut3uZzm9bYtvduSxoH7ZezU3FntHQbK6R8ilk5nR/exec', {
+            method: 'POST',
+            body: formData
+        });
+
+        submitBtn.textContent = 'تم إرسال الطلب ✔';
+
+        // يمكن إضافة Purchase هنا لو عندك صفحة نجاح
+        // fbq('track', 'Purchase', {value: 1800, currency: 'USD'});
+
+    } catch (error) {
+        submitBtn.textContent = 'حدث خطأ، حاول مجددًا ❌';
+        console.error(error);
+    }
+});
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شهادة زواج تذكارية فاخرة | خصم 30%</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-
-    <!-- Meta Pixel Code -->
-    <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = []; t = b.createElement(e); t.async = !0;
-            t.src = v; s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '1530558284759971');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=1530558284759971&ev=PageView&noscript=1" /></noscript>
-    <!-- End Meta Pixel Code -->
-    <meta name="facebook-domain-verification" content="xjf4gmqb0g84gso24s7mwvxaqyawe6" />
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: #451916;
-            color: #FFFAE8;
-            overflow-x: hidden;
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(69, 25, 22, 0.95);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
-            direction: ltr;
-        }
-
-        .logo {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            border: 2px solid #FFFAE8;
-            background: #FFFAE8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-        }
-
-        .store-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #FFFAE8;
-            direction: rtl;
-        }
-
-        .hero {
-            margin-top: 80px;
-            padding: 40px 20px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #451916 0%, #6b2820 100%);
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: #ff4444;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1)
-            }
-
-            50% {
-                transform: scale(1.05)
-            }
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-            font-weight: 900;
-            line-height: 1.3;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.95;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .price-box {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 25px 40px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            border: 2px solid rgba(255, 250, 232, 0.3);
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            opacity: 0.6;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-
-        .new-price {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #ffeb3b;
-            text-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
-        }
-
-        .discount-badge {
-            background: #ff4444;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        .timer-section {
-            background: rgba(255, 68, 68, 0.15);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px auto;
-            max-width: 500px;
-        }
-
-        .timer-title {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .timer {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .timer-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px 20px;
-            border-radius: 10px;
-            min-width: 70px;
-        }
-
-        .timer-number {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #ffeb3b;
-        }
-
-        .timer-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-
-        .stock-warning {
-            background: linear-gradient(90deg, rgba(255, 68, 68, 0.3)0%, rgba(255, 68, 68, 0)100%);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: fit-content;
-            border-right: 4px solid #ff4444;
-        }
-
-        .stock-warning span {
-            font-weight: 700;
-            color: #ffeb3b;
-            font-size: 1.2rem;
-        }
-
-        .benefits {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px 20px;
-            margin: 30px 0;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            transition: transform .3s;
-        }
-
-        .benefit-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .benefit-icon {
-            font-size: 2.5rem;
-        }
-
-        .benefit-text {
-            text-align: right;
-        }
-
-        .benefit-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .gallery {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .gallery-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-        }
-
-        .gallery-images {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .gallery-img {
-            width: 320px;
-            max-width: 95%;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s ease;
-            background: linear-gradient(45deg, #d4af37, #ffd700);
-            padding: 4px;
-            /* إطار ذهبي خارجي رقيق */
-        }
-
-        .gallery-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
-            background: white;
-            padding: 20px;
-            /* مسافة داخلية فخمة */
-            box-sizing: border-box;
-            object-fit: contain;
-            max-height: 480px;
-            /* لتجنب أن تصبح الصور طويلة جدًا على الموبايل */
-        }
-
-        .gallery-img:hover {
-            transform: scale(1.05);
-        }
-
-        .gallery-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .trust-section {
-            background: rgba(40, 167, 69, 0.1);
-            padding: 40px 20px;
-            margin: 40px 0;
-            text-align: center;
-        }
-
-        .trust-stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .trust-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #ffeb3b;
-        }
-
-        .guarantee {
-            background: rgba(40, 167, 69, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px auto;
-            max-width: 600px;
-        }
-
-        .testimonials {
-            padding: 40px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .testimonials-title {
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .testimonial {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            border-radius: 15px;
-            border-right: 4px solid #ffeb3b;
-        }
-
-        .stars {
-            color: #ffeb3b;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        .form-section {
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #451916 0%, #6b2820 100%);
-        }
-
-        .form-title {
-            font-size: 2.2rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .form-subtitle {
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #666;
-            transition: all .3s;
-        }
-
-        .step.active {
-            background: #28a745;
-            color: white;
-            transform: scale(1.2);
-        }
-
-        .form-step {
-            display: none;
-        }
-
-        .form-step.active {
-            display: block;
-            animation: fadeIn .5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #451916;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            font-family: 'Tajawal', sans-serif;
-            background: white;
-            color: #451916;
-            transition: all .3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #28a745;
-            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-        }
-
-        .date-grid {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr 1fr;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all .3s;
-            font-family: 'Tajawal', sans-serif;
-            margin-top: 10px;
-        }
-
-        .btn-primary {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .whatsapp-float {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #25D366;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.5);
-            cursor: pointer;
-            z-index: 999;
-            animation: bounce 2s infinite;
-            text-decoration: none;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-
-            50% {
-                transform: translateY(-10px)
-            }
-        }
-
-        .exit-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .exit-popup.show {
-            display: flex;
-        }
-
-        .popup-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 500px;
-            text-align: center;
-            color: #451916;
-            position: relative;
-            animation: popIn .5s;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #ff4444;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 1.3rem;
-        }
-
-        .popup-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #ff4444;
-            margin-bottom: 15px;
-        }
-
-        .popup-discount {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #28a745;
-            margin: 20px 0;
-        }
-
-        @keyframes popIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1
-            }
-        }
-
-        .success-message {
-            display: none;
-            background: #28a745;
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.1rem;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn .5s;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        @media(max-width:768px) {
-            .hero-title {
-                font-size: 1.8rem;
-            }
-
-            .new-price {
-                font-size: 2.7rem;
-            }
-
-            .date-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-img {
-                width: 100%;
-                max-width: 350px;
-            }
-
-            .trust-stats {
-                gap: 20px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <header style="display: flex; align-items: center; gap: 10px; justify-content: start;  align-items: center;">
-        <div class="">
-            <img src="img/logo.png" width="30" height="30" alt="logo">
-        </div>
-        <div class="store-name">Store in your House</div>
-    </header>
-
-    <div class="hero">
-        <div class="hero-badge">عرض محدود لفترة قصيرة</div>
-        <h1 class="hero-title">خلّدوا أجمل لحظة في حياتكم<br>بشهادة زواج فنية فاخرة</h1>
-        <p class="hero-subtitle">
-        <p>❤️ لمن هذه الهدية مناسبة؟</p>
-        <ul>
-            <li>لخطيبتك في يوم عقد القران</li>
-            <li>لزوجتك في ذكرى الزواج</li>
-            <li>كهدية لأختك أو صديقتك</li>
-            <li>للعرسان الجدد</li>
-            <li>للمتزوجين الذين يريدون تخليد تاريخهم</li>
-        </ul>
-        </p>
-
-        <div class="price-box">
-            <div class="old-price">السعر الأصلي: 2,700 دج</div>
-            <div class="new-price">1,800 دج</div>
-            <div class="discount-badge">وفر 900 دج</div>
-        </div>
-
-        <div class="timer-section">
-            <div class="timer-title">العرض ينتهي خلال:</div>
-            <div class="timer">
-                <div class="timer-box">
-                    <div class="timer-number" id="hours">23</div>
-                    <div class="timer-label">ساعة</div>
-                </div>
-                <div class="timer-box">
-                    <div class="timer-number" id="minutes">59</div>
-                    <div class="timer-label">دقيقة</div>
-                </div>
-                <div class="timer-box">
-                    <div class="timer-number" id="seconds">59</div>
-                    <div class="timer-label">ثانية</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stock-warning">
-            الكمية محدودة
-        </div>
-    </div>
-
-    <div class="form-section">
-        <h2 class="form-title">اطلب شهادتك الآن</h2>
-        <p class="form-subtitle">املأ البيانات بسرعة واحصل على شهادتك خلال 48 ساعة</p>
-
-        <div class="form-container">
-            <div class="step-indicator">
-                <div class="step active" id="step1-indicator">1</div>
-                <div class="step" id="step2-indicator">2</div>
-                <div class="step" id="step3-indicator">3</div>
-            </div>
-
-            <form id="orderForm">
-                <div class="form-step active" id="step1">
-                    <div class="form-group"><label for="phone">رقم الهاتف</label>
-                        <input type="tel" autocomplete="tel" inputmode="numeric" id="phone" required
-                            pattern="(05|06|07)\d{8}"
-                            title="الرقم يجب أن يبدأ ب 05 أو 06 أو 07 و يحتوي على 10 أرقام فقط" maxlength="10"
-                            placeholder="مثال: 0555123456">
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="moveStep(2)">
-                        التالي
-                    </button>
-                </div>
-
-                <div class="form-step" id="step2">
-                    <div class="form-group"><label for="state">الولاية</label><select id="state" required></select>
-                    </div>
-                    <div class="form-group"><label for="commune">البلدية</label><select id="commune" required>
-                            <option value="">اختر الولاية أولاً</option>
-                        </select></div>
-                    <button type="button" class="btn btn-primary" onclick="moveStep(3)">
-                        التالي
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="moveStep(1)">
-                        رجوع
-                    </button>
-                </div>
-
-                <div class="form-step" id="step3">
-                    <div class="form-group"><label for="groomName">اسم الزوج كاملاً</label><input type="text"
-                            id="groomName" required></div>
-                    <div class="form-group"><label for="brideName">اسم الزوجة كاملاً</label><input type="text"
-                            id="brideName" required></div>
-                    <div class="form-group"><label>تاريخ الزواج</label>
-                        <div class="date-grid">
-                            <input type="text" id="weddingYear" placeholder="مثال 2022" maxlength="4" required>
-                            <select id="weddingMonth" required>
-                                <option value="">الشهر</option>
-                                <option value="01">يناير</option>
-                                <option value="02">فبراير</option>
-                                <option value="03">مارس</option>
-                                <option value="04">أبريل</option>
-                                <option value="05">مايو</option>
-                                <option value="06">يونيو</option>
-                                <option value="07">يوليو</option>
-                                <option value="08">أغسطس</option>
-                                <option value="09">سبتمبر</option>
-                                <option value="10">أكتوبر</option>
-                                <option value="11">نوفمبر</option>
-                                <option value="12">ديسمبر</option>
-                            </select>
-                            <input type="text" id="weddingDay" placeholder="09 مثال" maxlength="2" required>
-                        </div>
-                    </div>
-                    <div class="form-group"><label for="color">اختر اللون</label>
-                        <select id="color" required>
-                            <option value="">اختر اللون</option>
-                            <option value="أبيض">أبيض فاخر</option>
-                            <option value="أسود">أسود أنيق</option>
-                            <option value="ذهبي">ذهبي ملكي</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
-                        اطلب الآن بـ 1800 دج فقط
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="moveStep(2)">
-                        رجوع
-                    </button>
-                </div>
-            </form>
-            <div class="success-message" id="successMessage">تم استلام طلبك بنجاح! سنتواصل معك خلال دقائق</div>
-        </div>
-    </div>
-
-    <div class="benefits">
-        <div class="benefits-grid">
-            <div class="benefit-item">
-                <div class="benefit-icon">ضمان الجودة</div>
-                <div class="benefit-text">
-                    <div class="benefit-title">ضمان الجودة</div>
-                    <div class="benefit-desc">استرجاع المال خلال 7 أيام</div>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">تصميم فاخر</div>
-                <div class="benefit-text">
-                    <div class="benefit-title">تصميم فاخر</div>
-                    <div class="benefit-desc">خط عربي راقي + زخرفة ذهبية</div>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">إطار هدية</div>
-                <div class="benefit-text">
-                    <div class="benefit-title">إطار هدية</div>
-                    <div class="benefit-desc">إطار خشبي فاخر مجانًا</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="gallery">
-        <h2 class="gallery-title">شاهد جمال التصميم</h2>
-        <div class="gallery-images">
-            <div class="gallery-img"><img src="img/white.png" alt="أبيض"></div>
-            <div class="gallery-img"><img src="img/black.png" alt="أسود"></div>
-            <div class="gallery-img"><img src="img/gold.png" alt="ذهبي"></div>
-        </div>
-    </div>
-
-    <div class="trust-section">
-        <div class="trust-stats">
-            <div class="trust-stat">
-                <div class="trust-number">850+</div>
-                <div class="trust-label">عائلة سعيدة</div>
-            </div>
-            <div class="trust-stat">
-                <div class="trust-number">4.9</div>
-                <div class="trust-label">تقييم</div>
-            </div>
-            <div class="trust-stat">
-                <div class="trust-number">100%</div>
-                <div class="trust-label">رضا العملاء</div>
-            </div>
-        </div>
-        <div class="guarantee">
-            <div style="font-size:3rem;margin-bottom:10px;">ضمان</div>
-            <div style="font-size:1.1rem;font-weight:700;">ضمان استرجاع المال خلال 7 أيام إذا لم تكن راضيًا تمامًا</div>
-        </div>
-    </div>
-
-    <div class="testimonials">
-        <h2 class="testimonials-title">ماذا قال عملاؤنا؟</h2>
-        <div class="testimonials-grid">
-            <div class="testimonial">
-                <div class="stars">★★★★★</div>
-                <div class="testimonial-text">"والله شهادة راااائعة! الجودة فوق التوقعات والتصميم يجنن"</div>
-                <div class="testimonial-author">- أميرة، وهران</div>
-            </div>
-            <div class="testimonial">
-                <div class="stars">★★★★★</div>
-                <div class="testimonial-text">"أحسن هدية ممكن تقدموها للعروسين. جات في وقتها والتغليف فاخر"</div>
-                <div class="testimonial-author">- كريم، الجزائر</div>
-            </div>
-            <div class="testimonial">
-                <div class="stars">★★★★★</div>
-                <div class="testimonial-text">"ما توقعتش هالجودة! الإطار خشبي والطباعة HD. يستاهل كل دينار"</div>
-                <div class="testimonial-author">- فاطمة، قسنطينة</div>
-            </div>
-        </div>
-    </div>
-
-    <a href="https://wa.me/213774263005?text=مرحبا%20أريد%20شهادة%20زواج%20فاخرة" class="whatsapp-float"
-        style="padding: 7px 2px 2px 2px;" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5.0 -10.0 110.0 135.0">
-            <path fill="#fff"
-                d="m82.5 50c0-17.922-14.578-32.5-32.5-32.5s-32.5 14.578-32.5 32.5c0 5.25 1.2812 10.461 3.7109 15.078l-2.1797 15.238 13.27-3.0586c5.2695 3.4297 11.379 5.2383 17.699 5.2383 17.922 0.003906 32.5-14.574 32.5-32.496zm-50.148-5.9492c-1.6406-8.2109 2.9492-11 5.8398-11.93 1.1914-0.37891 2.5 0.23047 3 1.3984l2.9297 6.8398c0.57031 1.3281 0.25 2.8984-0.80078 3.8984l-2.1602 2.0703c2.2617 7.4492 10.449 11.75 11.93 12.469l2.1797-2.1602c0.94141-0.94141 2.3594-1.2617 3.6211-0.82031l7.4414 2.5898c1.0781 0.37891 1.7812 1.4414 1.6602 2.5391-0.35938 3.3008-2.6914 5.1484-4.5781 6.1289-1.1719 0.60156-2.4883 0.91016-3.8281 0.91016-0.51953 0-1.0312-0.050781-1.5508-0.14062-21.895-3.9219-25.656-23.594-25.684-23.793z" />
-        </svg>
-    </a>
-
-    <div class="exit-popup" id="exitPopup">
-        <div class="popup-content">
-            <button class="popup-close"
-                onclick="document.getElementById('exitPopup').classList.remove('show')">×</button>
-            <h3 class="popup-title">لا تذهب الآن!</h3>
-            <p style="font-size:1.1rem;margin-bottom:20px;">احصل على العرض قبل نفاذ الكمية المحدودة</p>
-            <div class="popup-discount">فقط 1800 دج</div>
-            <button class="btn btn-primary"
-                onclick="document.querySelector('.form-section').scrollIntoView();document.getElementById('exitPopup').classList.remove('show')">اطلب
-                الآن</button>
-        </div>
-    </div>
-
-    <script src="scripts/script.js"></script>
-</body>
-
-
-
-</html>
