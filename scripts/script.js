@@ -1,3 +1,18 @@
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyAm1I7Pqa8P2tF7_IybK5ixMu716dvwe_k",
+    authDomain: "store-in-your-house.firebaseapp.com",
+    projectId: "store-in-your-house",
+    storageBucket: "store-in-your-house.firebasestorage.app",
+    messagingSenderId: "956809132628",
+    appId: "1:956809132628:web:125ab01b2aff641e9fcbc1",
+    measurementId: "G-5CN8BRYTNQ"
+};
+
+// Initialize Firebase (Compat)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // قاعدة بيانات الولايات والبلديات كاملة
 const communesParWilaya = {
     "01 - أدرار": ["أدرار", "تامنطيط", "أولف", "تيميمون", "زاوية كنتة", "شروين", "تسابيت", "تمست", "سالي", "أقبلي", "أولاد عيسى", "برج باجي مختار", "رقان", "أوقروت"],
@@ -92,7 +107,8 @@ function field(id) {
     return document.getElementById(id);
 }
 
-function moveStep(n) {
+// Make functions global for inline event handlers (onclick / oninput)
+window.moveStep = function (n) {
 
     // Step 1 → Step 2 (validate phone)
     if (n === 2) {
@@ -154,6 +170,9 @@ function validateForm() {
     document.getElementById('submitBtn').disabled = !allFilled;
 }
 
+// Make global for oninput
+window.validateForm = validateForm;
+
 document.querySelectorAll('input, select').forEach(el =>
     el.addEventListener('input', validateForm)
 );
@@ -173,7 +192,7 @@ setInterval(() => {
 }, 1000);
 
 
-// إرسال إلى Google Sheet + إرسال InitiateCheckout الصحيح
+// إرسال إلى Google Sheet + Firebase
 document.getElementById('orderForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -181,32 +200,67 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     submitBtn.disabled = true;
     submitBtn.textContent = 'جاري الإرسال...';
 
+    // تجهيز البيانات
+    const phone = field('phone').value;
+    const wilaya = field('state').value;
+    const baldaya = field('commune').value;
+    const address = field('address').value;
+    const groomName = field('groomName').value;
+    const brideName = field('brideName').value;
+    const color = field('color').value;
 
-
-    // تجهيز التاريخ
+    // التاريخ
     const year = document.getElementById('weddingYear').value;
     const month = document.getElementById('weddingMonth').value;
     const day = document.getElementById('weddingDay').value.padStart(2, '0');
-    const weddingDate = `${year}/${month}/${day}`;
+    const marriageDate = `${year}/${month}/${day}`;
 
-    const color = document.getElementById('color').value;
-
-    // Google Sheet FormData
-    const formData = new FormData();
-    formData.append('phone', '="' + document.getElementById('phone').value + '"');
-    formData.append('state', document.getElementById('state').value);
-    formData.append('commune', document.getElementById('commune').value);
-    formData.append('groomName', document.getElementById('groomName').value);
-    formData.append('brideName', document.getElementById('brideName').value);
-    formData.append('weddingDate', weddingDate);
-    formData.append('color', color);
-
-    // New Fields
-    formData.append('address', document.getElementById('address').value);
+    // نوع التوصيل
     const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+
+    const customerName = `${groomName} & ${brideName}`;
+
+    // 1️⃣ إرسال إلى Firebase Firestore (Primary)
+    try {
+        const docRef = await db.collection("orders").add({
+            customerName: customerName,
+            phoneNumber: phone,
+            address: address,
+            wilaya: wilaya,
+            baldaya: baldaya,
+            productName: "شهادة زواج تذكارية فاخرة", // Default Product Name
+            color: color,
+            productPrice: 1800, // Fixed price for main page
+            deliveryCost: 0, // Should be updated based on wilaya if possible, but 0 default is safer than NaN
+            husbandName: groomName,
+            wifeName: brideName,
+            marriageDate: marriageDate,
+            deliveryType: deliveryType,
+            customFieldM: deliveryType, // Mapping
+            status: "new",
+            source: "Website",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            callCount: 0,
+            smsSent: false
+        });
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document to Firestore: ", e);
+        // Continue to Sheets even if Firebase fails? Yes.
+    }
+
+    // 2️⃣ إرسال إلى Google Apps Script (Backup)
+    const formData = new FormData();
+    formData.append('phone', '="' + phone + '"');
+    formData.append('state', wilaya);
+    formData.append('commune', baldaya);
+    formData.append('groomName', groomName);
+    formData.append('brideName', brideName);
+    formData.append('weddingDate', marriageDate);
+    formData.append('color', color);
+    formData.append('address', address);
     formData.append('deliveryType', deliveryType);
 
-    // إرسال إلى Google Apps Script
     try {
         await fetch('https://script.google.com/macros/s/AKfycby8U0Sebyw3msKLeTW1VImHK1Z0ut3uZzm9bYtvduSxoH7ZezU3FntHQbK6R8ilk5nR/exec', {
             method: 'POST',
@@ -214,13 +268,16 @@ document.getElementById('orderForm').addEventListener('submit', async function (
         });
 
         submitBtn.textContent = 'تم إرسال الطلب ✔';
+        document.getElementById('successMessage').classList.add('show');
 
-        // يمكن إضافة Purchase هنا لو عندك صفحة نجاح
-        // fbq('track', 'Purchase', {value: 1800, currency: 'USD'});
+        // Hide form after success
+        document.querySelector('form').style.display = 'none';
 
     } catch (error) {
         submitBtn.textContent = 'حدث خطأ، حاول مجددًا ❌';
         console.error(error);
+
+        // If Google Sheets fails but Firestore succeeded, we should probably still show success?
+        // simple approach: show error only if both fail or if network error on fetch.
     }
 });
-
