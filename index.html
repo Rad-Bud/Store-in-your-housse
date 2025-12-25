@@ -738,7 +738,7 @@
                         <input type="tel" autocomplete="tel" inputmode="numeric" id="phone" required
                             pattern="(05|06|07)\d{8}"
                             title="الرقم يجب أن يبدأ ب 05 أو 06 أو 07 و يحتوي على 10 أرقام فقط" maxlength="10"
-                            placeholder="مثال: 0555123456">
+                            placeholder="مثال: 0555123456" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <button type="button" class="btn btn-primary" onclick="moveStep(2)">
                         التالي
@@ -789,7 +789,8 @@
                             id="brideName" required></div>
                     <div class="form-group"><label>تاريخ الزواج</label>
                         <div class="date-grid">
-                            <input type="text" id="weddingYear" placeholder="مثال 2022" maxlength="4" required>
+                            <input type="tel" inputmode="numeric" id="weddingYear" placeholder="مثال 2022" maxlength="4"
+                                required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <select id="weddingMonth" required>
                                 <option value="">الشهر</option>
                                 <option value="01">يناير</option>
@@ -805,7 +806,8 @@
                                 <option value="11">نوفمبر</option>
                                 <option value="12">ديسمبر</option>
                             </select>
-                            <input type="text" id="weddingDay" placeholder="09 مثال" maxlength="2" required>
+                            <input type="tel" inputmode="numeric" id="weddingDay" placeholder="09 مثال" maxlength="2"
+                                required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
                     <div class="form-group"><label for="color">اختر اللون</label>
@@ -925,6 +927,10 @@
                 الآن</button>
         </div>
     </div>
+
+    <!-- Firebase Compat SDKs (for file:// support) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script src="scripts/script.js"></script>
 </body>
